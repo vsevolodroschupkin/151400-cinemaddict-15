@@ -1,15 +1,19 @@
-import { createProfileTemplate } from './profile.js';
+import { createProfileTemplate } from './view/profile.js';
 import { createMainNavTemplate } from './view/main-navigation.js';
 import { createSortingTemplate } from './view/sort.js';
 import { createContentTemplate } from './view/content.js';
-import { createCardTemplate } from './view/card.js';
+import { createCardTemplate } from './view/card-view.js';
 import { createShowMoreButtonTemplate } from './view/show-more-button.js';
 import { createFooterStatisticsTemplate } from './view/footer-statistics.js';
 import { createPopupTemplate } from './view/popup.js';
+import { generateMovie } from './mock/movie-mock.js';
 
-const  CARD_COUNT_MAIN_LIST = 5;
-const  CARD_COUNT_RATED_LIST = 2;
-const  CARD_COUNT_COMMENTED_LIST = 2;
+const CARD_COUNT_MAIN_LIST = 5;
+const CARD_COUNT_RATED_LIST = 2;
+const CARD_COUNT_COMMENTED_LIST = 2;
+const MOVIE_COUNT = 20;
+
+const movies = new Array(MOVIE_COUNT).fill().map(generateMovie);
 
 const render = (container, template, place ) => {
   container.insertAdjacentHTML(place, template);
@@ -22,11 +26,9 @@ const profileTemplate = createProfileTemplate();
 const mainNavigationTemplate = createMainNavTemplate();
 const sortingTemplate = createSortingTemplate();
 const contentTemplate = createContentTemplate();
-const cardTemplate = createCardTemplate();
 const showMorwButtonTemplate = createShowMoreButtonTemplate();
 const footerStatisticsTemplate = createFooterStatisticsTemplate();
-const popupTemplate = createPopupTemplate();
-
+const popupTemplate = createPopupTemplate(movies[0]);
 
 render(headerElement, profileTemplate, 'beforeend');
 render(mainElement, mainNavigationTemplate, 'beforeend');
@@ -41,14 +43,17 @@ const filmsMainList = mainElement.querySelector('.films-list:nth-child(1)');
 render(filmsMainList, showMorwButtonTemplate, 'beforeend');
 
 for (let i = 0; i < CARD_COUNT_MAIN_LIST; i++) {
+  const cardTemplate = createCardTemplate(movies[i]);
   render(filmsMainListContainer, cardTemplate, 'beforeend');
 }
 for (let i = 0; i < CARD_COUNT_RATED_LIST; i++) {
+  const cardTemplate = createCardTemplate(movies[i]);
   render(topRatedFilmsContainer, cardTemplate, 'beforeend');
 }
 for (let i = 0; i < CARD_COUNT_COMMENTED_LIST; i++) {
+  const cardTemplate = createCardTemplate(movies[i]);
   render(mostCommentedListContainer, cardTemplate, 'beforeend');
 }
 
 render(footerElement, footerStatisticsTemplate, 'beforeend');
-render(footerElement, popupTemplate, 'afterend');
+// render(footerElement, popupTemplate, 'afterend');

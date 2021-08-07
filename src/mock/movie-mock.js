@@ -1,60 +1,16 @@
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
+import dayjs from 'dayjs';
+import dayjsRandom from 'dayjs-random';
+import { getRandomInteger, getRandomFloat } from '../utils.js';
+import { POSTERS, AGE_RATINGS, DESCRIPTION_PHRASES, EMOTIONS, COUNTRIES, MOVIE_MIN_ID, MOVIE_MAX_ID, MAX_SCORE, MIN_SCORE, SCORE_DIGIT, MIN_RUNTIME, MAX_RUNTIME, MOVIE_START_DATE, COMMENT_MIN_ID, COMMENT_MAX_ID,COMMENT_MIN_QNTY, COMMENT_MAX_QNTY } from '../const.js';
 
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
+dayjs.extend(dayjsRandom);
 
-function getRandomFloat (min, max, digits) {
-  if (max === min) {
-    return 'Начало и конец диапазона равны. Вызовите функцию с другими аргументами.';
-  }
-  if (max < 0 || min < 0) {
-    return 'Диапазон может быть только положительным';
-  }
-  if (min > max) {
-    const count = max;
-    max = min;
-    min = count;
-  }
-  // eslint-disable-next-line prefer-template
-  const number = Math.min(min + (Math.random() * (max - min + parseFloat('1e-' + ((Math.random() + '').length - 1)))), max);
-  return parseFloat(number.toFixed(digits));
-};
 
-const POSTERS = [
-  'made-for-each-other.png',
-  'popeye-meets-sinbad.png',
-  'sagebrush-trail.jpg',
-  'santa-claus-conquers-the-martians.jpg'
-];
-
-const DESCRIPTION_PHRASES = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  'Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
-  'Aliquam id orci ut lectus varius viverra.',
-  'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
-  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
-  'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
-  'Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.'
-];
-
-const EMOTIONS = [
-  'smile',
-  'sleeping',
-  'puke',
-  'angry',
-];
-
-const MAX_SCORE = 10;
-const MIN_SCORE = 0;
-const SCORE_DIGIT = 1;
+const generateMovieId = () => (getRandomInteger(MOVIE_MIN_ID, MOVIE_MAX_ID));
 
 const generateScore = () => (getRandomFloat(MAX_SCORE, MIN_SCORE, SCORE_DIGIT));
 
-const generatePosterUrl = () => {
-  return `./images/posters/${POSTERS[getRandomInteger(0, POSTERS.length - 1)]}`
-};
+const generatePosterUrl = () => (`./images/posters/${POSTERS[getRandomInteger(0, POSTERS.length - 1)]}`);
 
 const generateDescription = () => {
   const description = [];
@@ -68,62 +24,71 @@ const generateDescription = () => {
   return description.join(' ');
 };
 
-const generateCommentEmotion = () => {
-  return EMOTIONS[getRandomInteger(0, EMOTIONS.length - 1)]
-};
+const generateRuntime = () => (getRandomInteger(MIN_RUNTIME, MAX_RUNTIME));
+
+const generateDate = () => (dayjs.between(MOVIE_START_DATE, dayjs()).format());
+
+const generateCountry = () => (COUNTRIES[getRandomInteger(0, COUNTRIES.length - 1)]);
+
+const generateCommentEmotion = () => (EMOTIONS[getRandomInteger(0, EMOTIONS.length - 1)]);
 
 
-const generateComment = () => {
-  return {
-    id: 42,
+const generateComment = () => (
+  {
+    id: getRandomInteger(COMMENT_MIN_ID, COMMENT_MAX_ID),
     author: 'Author Name',
     comment: 'a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
     date: '',
     emotion: generateCommentEmotion(),
   }
+);
+
+const generateCommentsArray = () => {
+  const commentsQuantity = getRandomInteger(COMMENT_MIN_QNTY, COMMENT_MAX_QNTY);
+  return new Array(commentsQuantity).fill().map(() => generateComment());
 };
 
-export const generateMovie = () => {
-  return {
-    id: 0,
-    comments: [
-      1
-    ],
-    film_info: {
+const generateAgeRating = () => (AGE_RATINGS[getRandomInteger(0, AGE_RATINGS.length - 1)]);
+
+export const generateMovie = () => (
+  {
+    id: generateMovieId(),
+    comments: generateCommentsArray().map((it) => it.id),
+    filmInfo: {
       title: 'Tenet',
-      alternative_title: 'Movie alternative tite',
-      total_rating: generateScore(),
+      alternativeTitle: 'Movie alternative title',
+      totalRating: generateScore(),
       poster: generatePosterUrl(),
-      age_rating: 16,
+      ageRating: generateAgeRating(),
       director: 'Directors name',
       writers: [
         'writer1',
         'writer2',
-        'writer3'
+        'writer3',
       ],
       actors: [
         'actor1',
         'actor2',
-        'actor3'
+        'actor3',
       ],
       release: {
-        date: '',
-        release_country: 'USA',
+        date: generateDate(),
+        releaseCountry: generateCountry(),
       },
-      runtime: 125,
+      runtime: generateRuntime(),
       genre:[
         'Animation',
         'Horror',
-        'Action'
+        'Action',
       ],
       description: generateDescription(),
 
     },
-    user_details: {
-      watchlist: false,
-      already_watched: true,
-      watching_date: 'watching date',
-      favorite: false
-    }
+    userDetails: {
+      watchlist: Boolean(getRandomInteger(0, 1)),
+      alreadyWatched: Boolean(getRandomInteger(0, 1)),
+      watchingDate: generateDate(),
+      favorite: Boolean(getRandomInteger(0, 1)),
+    },
   }
-};
+);

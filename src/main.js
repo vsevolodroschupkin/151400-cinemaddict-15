@@ -7,13 +7,20 @@ import { createShowMoreButtonTemplate } from './view/show-more-button.js';
 import { createFooterStatisticsTemplate } from './view/footer-statistics.js';
 import { createPopupTemplate } from './view/popup.js';
 import { generateMovie } from './mock/movie-mock.js';
+import { generateProfile } from './mock/profile-mock.js';
+import { generateFilter } from './mock/filters-mock.js';
 
-const CARD_COUNT_MAIN_LIST = 5;
+const CARD_COUNT_PER_STEP = 5;
 const CARD_COUNT_RATED_LIST = 2;
 const CARD_COUNT_COMMENTED_LIST = 2;
 const MOVIE_COUNT = 20;
+const TOTAL_MOVIE_NUMBER = 130291;
 
 const movies = new Array(MOVIE_COUNT).fill().map(generateMovie);
+const profile = generateProfile();
+const filters = generateFilter(movies);
+
+const cardsCount = Math.min(movies.length, CARD_COUNT_PER_STEP);
 
 const render = (container, template, place ) => {
   container.insertAdjacentHTML(place, template);
@@ -22,12 +29,12 @@ const render = (container, template, place ) => {
 const headerElement = document.querySelector('.header');
 const footerElement = document.querySelector('.footer');
 const mainElement = document.querySelector('.main');
-const profileTemplate = createProfileTemplate();
-const mainNavigationTemplate = createMainNavTemplate();
+const profileTemplate = createProfileTemplate(profile);
+const mainNavigationTemplate = createMainNavTemplate(filters);
 const sortingTemplate = createSortingTemplate();
 const contentTemplate = createContentTemplate();
 const showMorwButtonTemplate = createShowMoreButtonTemplate();
-const footerStatisticsTemplate = createFooterStatisticsTemplate();
+const footerStatisticsTemplate = createFooterStatisticsTemplate(TOTAL_MOVIE_NUMBER);
 const popupTemplate = createPopupTemplate(movies[0]);
 
 render(headerElement, profileTemplate, 'beforeend');
@@ -40,9 +47,28 @@ const topRatedFilmsContainer = mainElement.querySelector('.films-list:nth-child(
 const mostCommentedListContainer = mainElement.querySelector('.films-list:nth-child(3) .films-list__container');
 const filmsMainList = mainElement.querySelector('.films-list:nth-child(1)');
 
-render(filmsMainList, showMorwButtonTemplate, 'beforeend');
+if (movies.length > CARD_COUNT_PER_STEP) {
+  let renderedMovieCards = CARD_COUNT_PER_STEP;
 
-for (let i = 0; i < CARD_COUNT_MAIN_LIST; i++) {
+  render(filmsMainList, showMorwButtonTemplate, 'beforeend');
+
+  const loadMoreButton = filmsMainList.querySelector('.films-list__show-more');
+  loadMoreButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    movies
+      .slice(renderedMovieCards, renderedMovieCards + CARD_COUNT_PER_STEP)
+      .forEach((card) => render(filmsMainListContainer, createCardTemplate(card), 'beforeend'));
+
+    renderedMovieCards += CARD_COUNT_PER_STEP;
+    if ( renderedMovieCards >= movies.length) {
+      loadMoreButton.remove();
+    }
+
+  });
+
+}
+
+for (let i = 0; i < cardsCount; i++) {
   const cardTemplate = createCardTemplate(movies[i]);
   render(filmsMainListContainer, cardTemplate, 'beforeend');
 }
@@ -55,5 +81,6 @@ for (let i = 0; i < CARD_COUNT_COMMENTED_LIST; i++) {
   render(mostCommentedListContainer, cardTemplate, 'beforeend');
 }
 
+
 render(footerElement, footerStatisticsTemplate, 'beforeend');
-// render(footerElement, popupTemplate, 'afterend');
+render(footerElement, popupTemplate, 'afterend');

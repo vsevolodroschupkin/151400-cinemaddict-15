@@ -1,11 +1,42 @@
-export const createMainNavTemplate = () => (
-  `<nav class="main-navigation">
+
+const createMainNavItem = (filter) => {
+  const {name, count} = filter;
+
+  let itemName = '';
+  switch (name) {
+    case 'all' :
+      itemName = 'All Movies';
+      break;
+    case 'watchlist':
+      itemName = 'Watchlist';
+      break;
+    case 'history':
+      itemName = 'History';
+      break;
+    case 'favorites':
+      itemName = 'Favorites';
+      break;
+  }
+
+  const itemCount = name === 'all' ? '' : ` <span class="main-navigation__item-count">${count}</span>`;
+
+  return `<a
+    href="#${name}"
+    class="main-navigation__item main-navigation__item">${itemName}${itemCount}
+    </a>`;
+};
+
+
+export const createMainNavTemplate = (filters) => {
+
+  const navigationItemsTemplate = filters
+    .map((filter) => createMainNavItem(filter))
+    .join('');
+
+  return `<nav class="main-navigation">
     <div class="main-navigation__items">
-      <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-      <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
-      <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
-      <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
+      ${navigationItemsTemplate}
     </div>
     <a href="#stats" class="main-navigation__additional">Stats</a>
-  </nav>`
-);
+  </nav>`;
+};

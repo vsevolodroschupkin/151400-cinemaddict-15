@@ -23,6 +23,12 @@ export const DESCRIPTION_PHRASES = [
   'Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
 ];
 
+export const COMMENTS = [
+  'a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
+  'what a fantastic movie',
+  'Huh! Nothing interesting.Lost my time',
+];
+
 export const EMOTIONS = [
   'smile',
   'sleeping',

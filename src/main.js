@@ -6,7 +6,7 @@ import { createCardTemplate } from './view/card-view.js';
 import { createShowMoreButtonTemplate } from './view/show-more-button.js';
 import { createFooterStatisticsTemplate } from './view/footer-statistics.js';
 import { createPopupTemplate } from './view/popup.js';
-import { generateMovie } from './mock/movie-mock.js';
+import { commentsArray, generateMovie } from './mock/movie-mock.js';
 import { generateProfile } from './mock/profile-mock.js';
 import { generateFilter } from './mock/filters-mock.js';
 
@@ -35,7 +35,7 @@ const sortingTemplate = createSortingTemplate();
 const contentTemplate = createContentTemplate();
 const showMorwButtonTemplate = createShowMoreButtonTemplate();
 const footerStatisticsTemplate = createFooterStatisticsTemplate(TOTAL_MOVIE_NUMBER);
-const popupTemplate = createPopupTemplate(movies[0]);
+const popupTemplate = createPopupTemplate(movies[0], commentsArray);
 
 render(headerElement, profileTemplate, 'beforeend');
 render(mainElement, mainNavigationTemplate, 'beforeend');

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import dayjsRandom from 'dayjs-random';
 import { getRandomInteger, getRandomFloat } from '../utils.js';
-import { POSTERS, AGE_RATINGS, DESCRIPTION_PHRASES, EMOTIONS, COUNTRIES, MOVIE_MIN_ID, MOVIE_MAX_ID, MAX_SCORE, MIN_SCORE, SCORE_DIGIT, MIN_RUNTIME, MAX_RUNTIME, MOVIE_START_DATE, COMMENT_MIN_ID, COMMENT_MAX_ID,COMMENT_MIN_QNTY, COMMENT_MAX_QNTY } from '../const.js';
+import { POSTERS, AGE_RATINGS, DESCRIPTION_PHRASES, EMOTIONS, COUNTRIES, MOVIE_MIN_ID, MOVIE_MAX_ID, MAX_SCORE, MIN_SCORE, SCORE_DIGIT, MIN_RUNTIME, MAX_RUNTIME, MOVIE_START_DATE, COMMENT_MIN_ID, COMMENT_MAX_ID,COMMENT_MIN_QNTY, COMMENT_MAX_QNTY, COMMENTS } from '../const.js';
 
 dayjs.extend(dayjsRandom);
 
@@ -32,13 +32,16 @@ const generateCountry = () => (COUNTRIES[getRandomInteger(0, COUNTRIES.length - 
 
 const generateCommentEmotion = () => (EMOTIONS[getRandomInteger(0, EMOTIONS.length - 1)]);
 
+const generateCommentText = () => (COMMENTS[getRandomInteger(0, COMMENTS.length - 1)]);
+
+const generateAgeRating = () => (AGE_RATINGS[getRandomInteger(0, AGE_RATINGS.length - 1)]);
 
 const generateComment = () => (
   {
     id: getRandomInteger(COMMENT_MIN_ID, COMMENT_MAX_ID),
     author: 'Author Name',
-    comment: 'a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
-    date: '',
+    comment: generateCommentText(),
+    date: generateDate(),
     emotion: generateCommentEmotion(),
   }
 );
@@ -48,12 +51,12 @@ const generateCommentsArray = () => {
   return new Array(commentsQuantity).fill().map(() => generateComment());
 };
 
-const generateAgeRating = () => (AGE_RATINGS[getRandomInteger(0, AGE_RATINGS.length - 1)]);
+export const commentsArray = generateCommentsArray();
 
 export const generateMovie = () => (
   {
     id: generateMovieId(),
-    comments: generateCommentsArray().map((it) => it.id),
+    comments: commentsArray.map((it) => it.id),
     filmInfo: {
       title: 'Tenet',
       alternativeTitle: 'Movie alternative title',

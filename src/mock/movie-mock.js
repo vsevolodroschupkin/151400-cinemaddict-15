@@ -1,10 +1,46 @@
-import dayjs from 'dayjs';
-import dayjsRandom from 'dayjs-random';
-import { getRandomInteger, getRandomFloat } from '../utils.js';
-import { POSTERS, AGE_RATINGS, DESCRIPTION_PHRASES, EMOTIONS, COUNTRIES, MOVIE_MIN_ID, MOVIE_MAX_ID, MAX_SCORE, MIN_SCORE, SCORE_DIGIT, MIN_RUNTIME, MAX_RUNTIME, MOVIE_START_DATE, COMMENT_MIN_ID, COMMENT_MAX_ID,COMMENT_MIN_QNTY, COMMENT_MAX_QNTY, COMMENTS } from '../const.js';
+import { getRandomInteger } from '../utils/getRandomInteger.js';
+import { getRandomFloat } from '../utils/getRandomFloat.js';
+import { getRandomArrayElement } from '../utils/getRandomArrayElement.js';
+import { commentsArray } from './comments-mock.js';
 
-dayjs.extend(dayjsRandom);
+const POSTERS = [
+  'made-for-each-other.png',
+  'popeye-meets-sinbad.png',
+  'sagebrush-trail.jpg',
+  'santa-claus-conquers-the-martians.jpg',
+];
+const COUNTRIES = [
+  'USA',
+  'Japan',
+  'Great Britain',
+  'Turkey',
+  'Sweden',
+];
+const AGE_RATINGS = [
+  '0+',
+  '6+',
+  '12+',
+  '16+',
+  '18+',
+];
+const DESCRIPTION_PHRASES = [
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  'Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
+  'Aliquam id orci ut lectus varius viverra.',
+  'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
+  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
+  'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
+  'Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
+];
+const MOVIE_MIN_ID = 1;
+const MOVIE_MAX_ID = 978;
+const MAX_SCORE = 10;
+const MIN_SCORE = 0;
+const SCORE_DIGIT = 1;
+const MIN_RUNTIME = 1;
+const MAX_RUNTIME = 1000;
 
+const MOVIE_START_DATE = '1895-03-22';
 
 const generateMovieId = () => (getRandomInteger(MOVIE_MIN_ID, MOVIE_MAX_ID));
 
@@ -17,7 +53,7 @@ const generateDescription = () => {
   const phraseCount = getRandomInteger(1, 5);
 
   for (let i = 1; i <= phraseCount; i++) {
-    const phraseItem = DESCRIPTION_PHRASES[getRandomInteger(0, DESCRIPTION_PHRASES.length - 1)];
+    const phraseItem = getRandomArrayElement(DESCRIPTION_PHRASES);
     description.push(phraseItem);
   }
 
@@ -26,32 +62,9 @@ const generateDescription = () => {
 
 const generateRuntime = () => (getRandomInteger(MIN_RUNTIME, MAX_RUNTIME));
 
-const generateDate = () => (dayjs.between(MOVIE_START_DATE, dayjs()).format());
+const generateCountry = getRandomArrayElement(COUNTRIES);
 
-const generateCountry = () => (COUNTRIES[getRandomInteger(0, COUNTRIES.length - 1)]);
-
-const generateCommentEmotion = () => (EMOTIONS[getRandomInteger(0, EMOTIONS.length - 1)]);
-
-const generateCommentText = () => (COMMENTS[getRandomInteger(0, COMMENTS.length - 1)]);
-
-const generateAgeRating = () => (AGE_RATINGS[getRandomInteger(0, AGE_RATINGS.length - 1)]);
-
-const generateComment = () => (
-  {
-    id: getRandomInteger(COMMENT_MIN_ID, COMMENT_MAX_ID),
-    author: 'Author Name',
-    comment: generateCommentText(),
-    date: generateDate(),
-    emotion: generateCommentEmotion(),
-  }
-);
-
-const generateCommentsArray = () => {
-  const commentsQuantity = getRandomInteger(COMMENT_MIN_QNTY, COMMENT_MAX_QNTY);
-  return new Array(commentsQuantity).fill().map(() => generateComment());
-};
-
-export const commentsArray = generateCommentsArray();
+const generateAgeRating = getRandomArrayElement(AGE_RATINGS);
 
 export const generateMovie = () => (
   {

@@ -84,4 +84,4 @@ for (let i = 0; i < CARD_COUNT_COMMENTED_LIST; i++) {
 
 
 render(footerElement, footerStatisticsTemplate, 'beforeend');
-// render(footerElement, popupTemplate, 'afterend');
+render(footerElement, popupTemplate, 'afterend');

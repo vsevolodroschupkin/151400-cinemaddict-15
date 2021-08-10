@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import { MAX_DESCRIPTION_LENGTH, EMOTIONS } from '../const.js';
+import { EMOTIONS } from '../const.js';
+import { getFormattedDescription } from '../utils/getFormattedDescription.js';
 import { getFormattedDuration } from '../utils/getFormattedDuration.js';
 
 export const createPopupTemplate = (movie, commentsArray) => {
@@ -11,7 +12,7 @@ export const createPopupTemplate = (movie, commentsArray) => {
   const duration = getFormattedDuration(filmInfo.runtime);
   const genre = filmInfo.genre;
   const url = filmInfo.poster;
-  const description = filmInfo.description.length <= MAX_DESCRIPTION_LENGTH ? filmInfo.description : `${filmInfo.description.slice(0, MAX_DESCRIPTION_LENGTH - 1)  }...`;
+  const description = getFormattedDescription(filmInfo.description);
   const commentsQuantity = comments ? comments.length : '0';
   const director = filmInfo.director;
   const writers = filmInfo.writers.join(', ');

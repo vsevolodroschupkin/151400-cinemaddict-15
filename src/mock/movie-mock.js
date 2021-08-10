@@ -3,7 +3,6 @@ import { getRandomFloat } from '../utils/getRandomFloat.js';
 import { getRandomArrayElement } from '../utils/getRandomArrayElement.js';
 import { generateCommentsArray } from './comments-mock.js';
 import { getRandomBoolean } from '../utils/getRandomBoolean.js';
-import { getRandomDate } from '../utils/getRandomDate.js';
 
 const POSTERS = [
   'made-for-each-other.png',
@@ -41,7 +40,10 @@ const SCORE_DIGIT = 1;
 const MIN_RUNTIME = 1;
 const MAX_RUNTIME = 1000;
 
-const MOVIE_START_DATE = '1895-03-22';
+const MOVIE_START_YEAR = '1895';
+const MOVIE_END_YEAR = '2021';
+
+const generateRandomDate = () => new Date(getRandomInteger(MOVIE_START_YEAR, MOVIE_END_YEAR),getRandomInteger(0, 11), getRandomInteger(0, 28));
 
 const generateScore = () => (getRandomFloat(MAX_SCORE, MIN_SCORE, SCORE_DIGIT));
 
@@ -89,7 +91,7 @@ const generateMovie = () => (
         'actor3',
       ],
       release: {
-        date: 'generateDate()',
+        date: generateRandomDate(),
         releaseCountry: generateCountry(),
       },
       runtime: generateRuntime(),

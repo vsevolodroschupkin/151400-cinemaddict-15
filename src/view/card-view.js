@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { getFormattedDuration } from '../utils/getFormattedDuration.js';
-import { MAX_DESCRIPTION_LENGTH } from '../const.js';
+import { getFormattedDescription } from '../utils/getFormattedDescription.js';
 
 export const createCardTemplate = (movie) => {
   const {filmInfo, comments} = movie;
@@ -11,7 +11,7 @@ export const createCardTemplate = (movie) => {
   const duration = getFormattedDuration(filmInfo.runtime);
   const genre = filmInfo.genre[0];
   const url = filmInfo.poster;
-  const description = filmInfo.description.length <= MAX_DESCRIPTION_LENGTH ? filmInfo.description : `${filmInfo.description.slice(0, MAX_DESCRIPTION_LENGTH - 1)  }...`;
+  const description = getFormattedDescription(filmInfo.description);
   const commentsQuantity = comments ? comments.length : '0';
 
   return `<article class="film-card">

@@ -1,7 +1,8 @@
 import { getRandomInteger } from '../utils/getRandomInteger.js';
 import { getRandomFloat } from '../utils/getRandomFloat.js';
 import { getRandomArrayElement } from '../utils/getRandomArrayElement.js';
-import { commentsArray } from './comments-mock.js';
+import { generateCommentsArray } from './comments-mock.js';
+import { getRandomBoolean } from '../utils/getRandomBoolean.js';
 
 const POSTERS = [
   'made-for-each-other.png',
@@ -32,8 +33,7 @@ const DESCRIPTION_PHRASES = [
   'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
   'Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
 ];
-const MOVIE_MIN_ID = 1;
-const MOVIE_MAX_ID = 978;
+const MOVIE_START_ID = 1;
 const MAX_SCORE = 10;
 const MIN_SCORE = 0;
 const SCORE_DIGIT = 1;
@@ -41,8 +41,6 @@ const MIN_RUNTIME = 1;
 const MAX_RUNTIME = 1000;
 
 const MOVIE_START_DATE = '1895-03-22';
-
-const generateMovieId = () => (getRandomInteger(MOVIE_MIN_ID, MOVIE_MAX_ID));
 
 const generateScore = () => (getRandomFloat(MAX_SCORE, MIN_SCORE, SCORE_DIGIT));
 
@@ -60,16 +58,18 @@ const generateDescription = () => {
   return description.join(' ');
 };
 
-const generateRuntime = () => (getRandomInteger(MIN_RUNTIME, MAX_RUNTIME));
+const generateRuntime = () => getRandomInteger(MIN_RUNTIME, MAX_RUNTIME);
 
-const generateCountry = getRandomArrayElement(COUNTRIES);
+const generateCountry = () => getRandomArrayElement(COUNTRIES);
 
-const generateAgeRating = getRandomArrayElement(AGE_RATINGS);
+const generateAgeRating = () => getRandomArrayElement(AGE_RATINGS);
 
-export const generateMovie = () => (
+let movieId = MOVIE_START_ID;
+
+const generateMovie = () => (
   {
-    id: generateMovieId(),
-    comments: commentsArray.map((it) => it.id),
+    id: movieId++,
+    comments: [],
     filmInfo: {
       title: 'Tenet',
       alternativeTitle: 'Movie alternative title',
@@ -88,7 +88,7 @@ export const generateMovie = () => (
         'actor3',
       ],
       release: {
-        date: generateDate(),
+        date: 'generateDate()',
         releaseCountry: generateCountry(),
       },
       runtime: generateRuntime(),
@@ -101,10 +101,27 @@ export const generateMovie = () => (
 
     },
     userDetails: {
-      watchlist: Boolean(getRandomInteger(0, 1)),
-      alreadyWatched: Boolean(getRandomInteger(0, 1)),
-      watchingDate: generateDate(),
-      favorite: Boolean(getRandomInteger(0, 1)),
+      watchlist: getRandomBoolean(),
+      alreadyWatched: getRandomBoolean(),
+      watchingDate: 'generateDate()',
+      favorite: getRandomBoolean(),
     },
   }
 );
+
+export const generateMoviesArray = (count) => new Array(count).fill().map(generateMovie);
+
+export const getMovieComments = (movie, comments) => {
+  const commentIds = movie.comments;
+  return comments.filter((item) => commentIds.includes(item.id));
+};
+
+export const generateCommentsForMovies = (movies) => {
+  let comments = [];
+  movies.forEach((it) => {
+    const movieComments = generateCommentsArray();
+    it.comments = movieComments.map((comment) => comment.id);
+    comments = [...comments, ... movieComments];
+  });
+  return comments;
+};

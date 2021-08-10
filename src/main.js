@@ -6,7 +6,7 @@ import { createCardTemplate } from './view/card-view.js';
 import { createShowMoreButtonTemplate } from './view/show-more-button.js';
 import { createFooterStatisticsTemplate } from './view/footer-statistics.js';
 import { createPopupTemplate } from './view/popup.js';
-import { commentsArray, generateMovie } from './mock/movie-mock.js';
+import { generateMoviesArray, getMovieComments, generateCommentsForMovies } from './mock/movie-mock.js';
 import { generateProfile } from './mock/profile-mock.js';
 import { generateFilter } from './mock/filters-mock.js';
 
@@ -14,9 +14,11 @@ const CARD_COUNT_PER_STEP = 5;
 const CARD_COUNT_RATED_LIST = 2;
 const CARD_COUNT_COMMENTED_LIST = 2;
 const MOVIE_COUNT = 20;
-const TOTAL_MOVIE_NUMBER = 130291;
+const TOTAL_MOVIE_NUMBER = 13029;
 
-const movies = new Array(MOVIE_COUNT).fill().map(generateMovie);
+const movies = generateMoviesArray(MOVIE_COUNT);
+const comments = generateCommentsForMovies(movies);
+
 const profile = generateProfile();
 const filters = generateFilter(movies);
 
@@ -35,7 +37,7 @@ const sortingTemplate = createSortingTemplate();
 const contentTemplate = createContentTemplate();
 const showMorwButtonTemplate = createShowMoreButtonTemplate();
 const footerStatisticsTemplate = createFooterStatisticsTemplate(TOTAL_MOVIE_NUMBER);
-const popupTemplate = createPopupTemplate(movies[0], commentsArray);
+const popupTemplate = createPopupTemplate(movies[0], getMovieComments(movies[12], comments));
 
 render(headerElement, profileTemplate, 'beforeend');
 render(mainElement, mainNavigationTemplate, 'beforeend');

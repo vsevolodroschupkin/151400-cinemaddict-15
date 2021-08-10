@@ -1,6 +1,7 @@
 import { getRandomInteger } from '../utils/getRandomInteger.js';
 import { getRandomArrayElement } from '../utils/getRandomArrayElement.js';
 import { getRandomDate } from '../utils/getRandomDate.js';
+import { EMOTIONS } from '../const.js';
 
 const COMMENT_MIN_COUNT = 0;
 const COMMENT_MAX_COUNT = 5;
@@ -9,21 +10,23 @@ const COMMENTS = [
   'what a fantastic movie',
   'Huh! Nothing interesting.Lost my time',
 ];
-const EMOTIONS = [
-  'smile',
-  'sleeping',
-  'puke',
-  'angry',
+const AUTHORS = [
+  'Tony Hawk',
+  'Little Buster',
+  'The Great Emperor',
 ];
 
-const generateCommentEmotion = getRandomArrayElement(EMOTIONS);
-const generateCommentText = getRandomArrayElement(COMMENTS);
+
+const generateCommentEmotion = () => getRandomArrayElement(EMOTIONS);
+const generateCommentText = () => getRandomArrayElement(COMMENTS);
+const generateAuthor = () => getRandomArrayElement(AUTHORS);
 
 let commentId = 0;
+
 const generateComment = () => (
   {
     id: commentId++,
-    author: 'Author Name',
+    author: generateAuthor(),
     comment: generateCommentText(),
     date: getRandomDate(),
     emotion: generateCommentEmotion(),

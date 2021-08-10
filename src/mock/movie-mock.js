@@ -3,6 +3,7 @@ import { getRandomFloat } from '../utils/getRandomFloat.js';
 import { getRandomArrayElement } from '../utils/getRandomArrayElement.js';
 import { generateCommentsArray } from './comments-mock.js';
 import { getRandomBoolean } from '../utils/getRandomBoolean.js';
+import { getRandomDate } from '../utils/getRandomDate.js';
 
 const POSTERS = [
   'made-for-each-other.png',

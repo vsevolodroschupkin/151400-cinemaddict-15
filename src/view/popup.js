@@ -2,8 +2,9 @@ import dayjs from 'dayjs';
 import { EMOTIONS } from '../const.js';
 import { getFormattedDescription } from '../utils/getFormattedDescription.js';
 import { getFormattedDuration } from '../utils/getFormattedDuration.js';
+import { createElement } from '../utils/createElement.js';
 
-export const createPopupTemplate = (movie, commentsArray) => {
+const createPopupTemplate = (movie, commentsArray) => {
   const {filmInfo, comments} = movie;
 
   const title = filmInfo.title;
@@ -161,3 +162,27 @@ export const createPopupTemplate = (movie, commentsArray) => {
     </form>
   </section>`;
 };
+
+export default class Popup {
+  constructor(movie, comments) {
+    this._movie = movie;
+    this._comments = comments;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPopupTemplate(this._movie, this._comments);
+  }
+
+  getElement() {
+    if(!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

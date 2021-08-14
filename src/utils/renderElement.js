@@ -1,7 +1,4 @@
-const RenderPosition = {
-  AFTERBEGIN: 'afterbegin',
-  BEFOREEND: 'beforeend',
-};
+import { RenderPosition } from './renderPosition.js';
 
 export const renderElement = (container, element, place) => {
   switch (place) {

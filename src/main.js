@@ -1,4 +1,4 @@
-import { createProfileTemplate } from './view/profile.js';
+import ProfileView from './view/profile.js';
 import { createMainNavTemplate } from './view/main-navigation.js';
 import { createSortingTemplate } from './view/sort.js';
 import { createContentTemplate } from './view/content.js';
@@ -10,6 +10,8 @@ import { generateMoviesArray, getMovieComments, generateCommentsForMovies } from
 import { generateProfile } from './mock/profile-mock.js';
 import { generateFilter } from './utils/filters.js';
 import { renderTemplate } from './utils/renderTemplate.js';
+import { RenderPosition } from './utils/renderPosition.js';
+import { renderElement } from './utils/renderElement.js';
 
 const CARD_COUNT_PER_STEP = 5;
 const CARD_COUNT_RATED_LIST = 2;
@@ -27,7 +29,6 @@ const cardsCount = Math.min(movies.length, CARD_COUNT_PER_STEP);
 const headerElement = document.querySelector('.header');
 const footerElement = document.querySelector('.footer');
 const mainElement = document.querySelector('.main');
-const profileTemplate = createProfileTemplate(profile);
 const mainNavigationTemplate = createMainNavTemplate(filters);
 const sortingTemplate = createSortingTemplate();
 const contentTemplate = createContentTemplate();
@@ -35,7 +36,7 @@ const showMorwButtonTemplate = createShowMoreButtonTemplate();
 const footerStatisticsTemplate = createFooterStatisticsTemplate(movies.length);
 const popupTemplate = createPopupTemplate(movies[0], getMovieComments(movies[12], comments));
 
-renderTemplate(headerElement, profileTemplate, 'beforeend');
+renderTemplate(headerElement, new ProfileView(profile).getElement(), RenderPosition.BEFOREEND);
 renderTemplate(mainElement, mainNavigationTemplate, 'beforeend');
 renderTemplate(mainElement, sortingTemplate, 'beforeend');
 renderTemplate(mainElement, contentTemplate, 'beforeend');
@@ -81,4 +82,4 @@ for (let i = 0; i < CARD_COUNT_COMMENTED_LIST; i++) {
 
 
 renderTemplate(footerElement, footerStatisticsTemplate, 'beforeend');
-renderTemplate(footerElement, popupTemplate, 'afterend');
+// renderTemplate(footerElement, popupTemplate, 'afterend');

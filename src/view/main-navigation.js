@@ -1,3 +1,4 @@
+import { createElement } from '../utils/createElement.js';
 
 const createMainNavItem = (filter) => {
   const {name, count} = filter;
@@ -26,8 +27,7 @@ const createMainNavItem = (filter) => {
     </a>`;
 };
 
-
-export const createMainNavTemplate = (filters) => {
+const createMainNavTemplate = (filters) => {
 
   const navigationItemsTemplate = filters
     .map((filter) => createMainNavItem(filter))
@@ -40,3 +40,26 @@ export const createMainNavTemplate = (filters) => {
     <a href="#stats" class="main-navigation__additional">Stats</a>
   </nav>`;
 };
+
+export default class MainNav {
+  constructor(filters) {
+    this._filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMainNavTemplate(this._filters);
+  }
+
+  getElement() {
+    if(!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

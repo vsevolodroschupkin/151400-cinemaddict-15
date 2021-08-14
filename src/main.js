@@ -1,7 +1,7 @@
 import ProfileView from './view/profile.js';
-import { createMainNavTemplate } from './view/main-navigation.js';
-import { createSortingTemplate } from './view/sort.js';
-import { createContentTemplate } from './view/content.js';
+import MainNavView from './view/main-navigation.js';
+import SortingView from './view/sorting.js';
+import ContentView from './view/content.js';
 import { createCardTemplate } from './view/card-view.js';
 import { createShowMoreButtonTemplate } from './view/show-more-button.js';
 import { createFooterStatisticsTemplate } from './view/footer-statistics.js';
@@ -29,17 +29,14 @@ const cardsCount = Math.min(movies.length, CARD_COUNT_PER_STEP);
 const headerElement = document.querySelector('.header');
 const footerElement = document.querySelector('.footer');
 const mainElement = document.querySelector('.main');
-const mainNavigationTemplate = createMainNavTemplate(filters);
-const sortingTemplate = createSortingTemplate();
-const contentTemplate = createContentTemplate();
 const showMorwButtonTemplate = createShowMoreButtonTemplate();
 const footerStatisticsTemplate = createFooterStatisticsTemplate(movies.length);
 const popupTemplate = createPopupTemplate(movies[0], getMovieComments(movies[12], comments));
 
-renderTemplate(headerElement, new ProfileView(profile).getElement(), RenderPosition.BEFOREEND);
-renderTemplate(mainElement, mainNavigationTemplate, 'beforeend');
-renderTemplate(mainElement, sortingTemplate, 'beforeend');
-renderTemplate(mainElement, contentTemplate, 'beforeend');
+renderElement(headerElement, new ProfileView(profile).getElement(), RenderPosition.BEFOREEND);
+renderElement(mainElement, new MainNavView(filters).getElement(), RenderPosition.BEFOREEND);
+renderElement(mainElement, new SortingView().getElement(), RenderPosition.BEFOREEND);
+renderElement(mainElement, new ContentView().getElement(), RenderPosition.BEFOREEND);
 
 const filmsMainListContainer = mainElement.querySelector('.films-list:nth-child(1) .films-list__container');
 const topRatedFilmsContainer = mainElement.querySelector('.films-list:nth-child(2) .films-list__container');

@@ -10,7 +10,7 @@ import { generateMoviesArray, getMovieComments, generateCommentsForMovies } from
 import { generateProfile } from './mock/profile-mock.js';
 import { generateFilter } from './utils/filters.js';
 import { RenderPosition } from './utils/renderPosition.js';
-import { renderElement } from './utils/renderElement.js';
+import { render } from './utils/render.js';
 
 const CARD_COUNT_PER_STEP = 5;
 const CARD_COUNT_RATED_LIST = 2;
@@ -29,10 +29,10 @@ const headerElement = document.querySelector('.header');
 const footerElement = document.querySelector('.footer');
 const mainElement = document.querySelector('.main');
 
-renderElement(headerElement, new ProfileView(profile).getElement(), RenderPosition.BEFOREEND);
-renderElement(mainElement, new MainNavView(filters).getElement(), RenderPosition.BEFOREEND);
-renderElement(mainElement, new SortingView().getElement(), RenderPosition.BEFOREEND);
-renderElement(mainElement, new ContentView().getElement(), RenderPosition.BEFOREEND);
+render(headerElement, new ProfileView(profile).getElement(), RenderPosition.BEFOREEND);
+render(mainElement, new MainNavView(filters).getElement(), RenderPosition.BEFOREEND);
+render(mainElement, new SortingView().getElement(), RenderPosition.BEFOREEND);
+render(mainElement, new ContentView().getElement(), RenderPosition.BEFOREEND);
 
 const filmsMainListContainer = mainElement.querySelector('.films-list:nth-child(1) .films-list__container');
 const topRatedFilmsContainer = mainElement.querySelector('.films-list:nth-child(2) .films-list__container');
@@ -42,14 +42,14 @@ const filmsMainList = mainElement.querySelector('.films-list:nth-child(1)');
 if (movies.length > CARD_COUNT_PER_STEP) {
   let renderedMovieCards = CARD_COUNT_PER_STEP;
 
-  renderElement(filmsMainList, new ShowMoreButtonView().getElement(), RenderPosition.BEFOREEND);
+  render(filmsMainList, new ShowMoreButtonView().getElement(), RenderPosition.BEFOREEND);
 
   const loadMoreButton = filmsMainList.querySelector('.films-list__show-more');
   loadMoreButton.addEventListener('click', (evt) => {
     evt.preventDefault();
     movies
       .slice(renderedMovieCards, renderedMovieCards + CARD_COUNT_PER_STEP)
-      .forEach((card) => renderElement(filmsMainListContainer, new CardView(card).getElement(), RenderPosition.BEFOREEND));
+      .forEach((card) => render(filmsMainListContainer, new CardView(card).getElement(), RenderPosition.BEFOREEND));
 
     renderedMovieCards += CARD_COUNT_PER_STEP;
 
@@ -62,14 +62,14 @@ if (movies.length > CARD_COUNT_PER_STEP) {
 }
 
 for (let i = 0; i < cardsCount; i++) {
-  renderElement(filmsMainListContainer, new CardView(movies[i]).getElement(), RenderPosition.BEFOREEND);
+  render(filmsMainListContainer, new CardView(movies[i]).getElement(), RenderPosition.BEFOREEND);
 }
 for (let i = 0; i < CARD_COUNT_RATED_LIST; i++) {
-  renderElement(topRatedFilmsContainer, new CardView(movies[i]).getElement(), RenderPosition.BEFOREEND);
+  render(topRatedFilmsContainer, new CardView(movies[i]).getElement(), RenderPosition.BEFOREEND);
 }
 for (let i = 0; i < CARD_COUNT_COMMENTED_LIST; i++) {
-  renderElement(mostCommentedListContainer, new CardView(movies[i]).getElement(), RenderPosition.BEFOREEND);
+  render(mostCommentedListContainer, new CardView(movies[i]).getElement(), RenderPosition.BEFOREEND);
 }
 
-renderElement(footerElement, new FooteStatisticsView(movies.length).getElement(), RenderPosition.BEFOREEND);
-renderElement(footerElement, new PopupView(movies[0], getMovieComments(movies[12], comments)).getElement(), RenderPosition.AFTEREND);
+render(footerElement, new FooteStatisticsView(movies.length).getElement(), RenderPosition.BEFOREEND);
+render(footerElement, new PopupView(movies[0], getMovieComments(movies[12], comments)).getElement(), RenderPosition.AFTEREND);

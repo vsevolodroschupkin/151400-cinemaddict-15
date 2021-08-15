@@ -1,21 +1,19 @@
 import { createElement } from '../utils/createElement.js';
 
-const createNoMovieTemplate = () => {
+const createMainFilmlistTemplate = () => (
+  `<section class="films-list">
+      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+      <div class="films-list__container"></div>
+  </section> `
+);
 
-  const message = 'message about no movies';
-
-  return `<section class="films-list">
-      <h2 class="films-list__title">${message}</h2>
-    </section> `;
-};
-
-export default class NoMovie {
+export default class MainFilmlist {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createNoMovieTemplate();
+    return createMainFilmlistTemplate();
   }
 
   getElement() {

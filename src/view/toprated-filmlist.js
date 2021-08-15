@@ -1,21 +1,19 @@
 import { createElement } from '../utils/createElement.js';
 
-const createNoMovieTemplate = () => {
+const createTopRatedFilmlistTemplate = () => (
+  `<section class="films-list films-list--extra">
+    <h2 class="films-list__title">Top rated</h2>
+    <div class="films-list__container"></div>
+  </section>`
+);
 
-  const message = 'message about no movies';
-
-  return `<section class="films-list">
-      <h2 class="films-list__title">${message}</h2>
-    </section> `;
-};
-
-export default class NoMovie {
+export default class TopRatedFilmlist {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createNoMovieTemplate();
+    return createTopRatedFilmlistTemplate();
   }
 
   getElement() {

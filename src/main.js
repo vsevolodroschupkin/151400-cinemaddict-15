@@ -3,9 +3,6 @@ import MainNavView from './view/main-navigation.js';
 import SortingView from './view/sorting.js';
 import ContentView from './view/content.js';
 import FilmslistView from './view/filmslist.js';
-import MainFilmlistView from './view/main-filmlist.js';
-import MostCommentedFilmlistView from './view/most-commented-filmlist.js';
-import TopRatedFilmlistView from './view/toprated-filmlist.js';
 import CardView from './view/card-view.js';
 import ShowMoreButtonView from './view/show-more-button.js';
 import FooteStatisticsView from './view/footer-statistics.js';
@@ -35,28 +32,25 @@ const headerElement = document.querySelector('.header');
 const footerElement = document.querySelector('.footer');
 const mainElement = document.querySelector('.main');
 
-
-const onPopupEscKeydown = (evt) => {
-  if(isEscEvent(evt)) {
-    evt.preventDefault();
-    closePopup();
-  }
-};
-const onPopupCloseButtonClick = (evt) => {
-  evt.preventDefault();
-  closePopup();
-};
-
-function closePopup () {
-  const popup = document.querySelector('.film-details');
-  popup.remove();
-
-  document.body.removeEventListener('keydown', onPopupEscKeydown);
-  document.body.classList.remove('hide-overflow');
-}
-
 const openPopup = (card, commentsArray) => {
   const popupComponent = new PopupView(card, getMovieComments(card, commentsArray));
+
+  const closePopup = (cb) => {
+    popupComponent.getElement().remove();
+    document.body.removeEventListener('keydown', cb);
+    document.body.classList.remove('hide-overflow');
+  };
+
+  const onPopupEscKeydown = (evt) => {
+    if(isEscEvent(evt)) {
+      evt.preventDefault();
+      closePopup(onPopupEscKeydown);
+    }
+  };
+  const onPopupCloseButtonClick = (evt) => {
+    evt.preventDefault();
+    closePopup(onPopupEscKeydown);
+  };
 
   popupComponent
     .getElement()
@@ -66,6 +60,8 @@ const openPopup = (card, commentsArray) => {
   document.body.appendChild(popupComponent.getElement());
   document.body.classList.add('hide-overflow');
   document.body.addEventListener('keydown', onPopupEscKeydown);
+
+
 };
 
 const renderCard = (cardListElement, card) => {

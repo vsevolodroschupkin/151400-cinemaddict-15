@@ -1,8 +1,9 @@
 import dayjs from 'dayjs';
 import { getFormattedDuration } from '../utils/getFormattedDuration.js';
 import { getFormattedDescription } from '../utils/getFormattedDescription.js';
+import { createElement } from '../utils/createElement.js';
 
-export const createCardTemplate = (movie) => {
+const createCardTemplate = (movie) => {
   const {filmInfo, comments} = movie;
 
   const title = filmInfo.title;
@@ -32,3 +33,26 @@ export const createCardTemplate = (movie) => {
     </div>
   </article>`;
 };
+
+export default class Card {
+  constructor(movie) {
+    this._element = null;
+    this._movie = movie;
+  }
+
+  getTemplate() {
+    return createCardTemplate(this._movie);
+  }
+
+  getElement() {
+    if(!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

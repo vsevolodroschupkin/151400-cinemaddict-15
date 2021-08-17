@@ -1,4 +1,4 @@
-import { createElement } from '../utils/createElement.js';
+import Abstract from './abstract.js';
 
 const creatFilmslistTemplate = (title, isExtra) => {
   const listTitle = title;
@@ -11,9 +11,9 @@ const creatFilmslistTemplate = (title, isExtra) => {
   </section>`;
 };
 
-export default class Filmslist {
+export default class Filmslist extends Abstract {
   constructor(title, isExtra) {
-    this._element = null;
+    super();
     this._title = title;
     this._isExtra = isExtra;
     this._container = null;
@@ -23,19 +23,8 @@ export default class Filmslist {
     return creatFilmslistTemplate(this._title, this._isExtra);
   }
 
-  getElement() {
-    if(!this._element){
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
   getContainer() {
     return this.getElement().querySelector('.films-list__container');
   }
 
-  removeTemplate() {
-    this._element = null;
-  }
 }

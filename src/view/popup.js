@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { EMOTIONS } from '../const.js';
 import { getFormattedDescription } from '../utils/getFormattedDescription.js';
 import { getFormattedDuration } from '../utils/getFormattedDuration.js';
-import { createElement } from '../utils/createElement.js';
+import Abstract from './abstract.js';
 
 const createPopupTemplate = (movie, commentsArray) => {
   const {filmInfo, comments} = movie;
@@ -163,26 +163,15 @@ const createPopupTemplate = (movie, commentsArray) => {
   </section>`;
 };
 
-export default class Popup {
+export default class Popup extends Abstract {
   constructor(movie, comments) {
+    super();
     this._movie = movie;
     this._comments = comments;
-    this._element = null;
   }
 
   getTemplate() {
     return createPopupTemplate(this._movie, this._comments);
   }
 
-  getElement() {
-    if(!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

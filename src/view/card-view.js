@@ -1,7 +1,7 @@
+import Abstract from './abstract.js';
 import dayjs from 'dayjs';
 import { getFormattedDuration } from '../utils/getFormattedDuration.js';
 import { getFormattedDescription } from '../utils/getFormattedDescription.js';
-import { createElement } from '../utils/createElement.js';
 
 const createCardTemplate = (movie) => {
   const {filmInfo, comments} = movie;
@@ -34,25 +34,13 @@ const createCardTemplate = (movie) => {
   </article>`;
 };
 
-export default class Card {
+export default class Card extends Abstract {
   constructor(movie) {
-    this._element = null;
+    super();
     this._movie = movie;
   }
 
   getTemplate() {
     return createCardTemplate(this._movie);
-  }
-
-  getElement() {
-    if(!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

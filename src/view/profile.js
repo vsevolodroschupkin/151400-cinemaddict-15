@@ -1,4 +1,4 @@
-import { createElement } from '../utils/createElement.js';
+import Abstract from './abstract.js';
 
 const createProfileTemplate = (profile) => {
 
@@ -10,25 +10,14 @@ const createProfileTemplate = (profile) => {
   </section>`;
 };
 
-export default class Profile {
+export default class Profile extends Abstract {
   constructor(profile) {
+    super();
     this._profile = profile;
-    this._element = null;
   }
 
   getTemplate() {
     return createProfileTemplate(this._profile);
   }
 
-  getElement() {
-    if(!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

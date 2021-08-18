@@ -85,15 +85,15 @@ const renderCard = (cardListElement, card) => {
   render(cardListElement, cardComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
-render(headerElement, new ProfileView(profile).getElement(), RenderPosition.BEFOREEND);
-render(mainElement, new MainNavView(filters).getElement(), RenderPosition.BEFOREEND);
-render(mainElement, new SortingView().getElement(), RenderPosition.BEFOREEND);
-render(mainElement, new ContentView().getElement(), RenderPosition.BEFOREEND);
+render(headerElement, new ProfileView(profile), RenderPosition.BEFOREEND);
+render(mainElement, new MainNavView(filters), RenderPosition.BEFOREEND);
+render(mainElement, new SortingView, RenderPosition.BEFOREEND);
+render(mainElement, new ContentView, RenderPosition.BEFOREEND);
 
 const contentContainer = mainElement.querySelector('.films');
 
 if (!movies.length) {
-  render(contentContainer, new NoMovieView().getElement(), RenderPosition.AFTERBEGIN);
+  render(contentContainer, new NoMovieView(), RenderPosition.AFTERBEGIN);
 } else {
   const FILM_CONTAINERS_META = [
     {
@@ -115,7 +115,7 @@ if (!movies.length) {
 
   FILM_CONTAINERS_META.forEach((element) => {
     const filmlistTemplate = new FilmslistView(element.title, element.isExtra);
-    render(contentContainer, filmlistTemplate.getElement(), RenderPosition.BEFOREEND);
+    render(contentContainer, filmlistTemplate, RenderPosition.BEFOREEND);
 
     const filmsListContainer = filmlistTemplate.getContainer();
 
@@ -130,14 +130,14 @@ if (movies.length > CARD_COUNT_PER_STEP) {
   const filmsMainList = mainElement.querySelector('.films-list:nth-child(1)');
   const filmsMainListContainer = mainElement.querySelector('.films-list:nth-child(1) .films-list__container');
 
-  render(filmsMainList, new ShowMoreButtonView().getElement(), RenderPosition.BEFOREEND);
+  render(filmsMainList, new ShowMoreButtonView, RenderPosition.BEFOREEND);
 
   const loadMoreButton = filmsMainList.querySelector('.films-list__show-more');
   loadMoreButton.addEventListener('click', (evt) => {
     evt.preventDefault();
     movies
       .slice(renderedMovieCards, renderedMovieCards + CARD_COUNT_PER_STEP)
-      .forEach((card) => render(filmsMainListContainer, new CardView(card).getElement(), RenderPosition.BEFOREEND));
+      .forEach((card) => render(filmsMainListContainer, new CardView(card), RenderPosition.BEFOREEND));
 
     renderedMovieCards += CARD_COUNT_PER_STEP;
 
@@ -149,5 +149,5 @@ if (movies.length > CARD_COUNT_PER_STEP) {
 
 }
 
-render(footerElement, new FooteStatisticsView(movies.length).getElement(), RenderPosition.BEFOREEND);
+render(footerElement, new FooteStatisticsView(movies.length), RenderPosition.BEFOREEND);
 

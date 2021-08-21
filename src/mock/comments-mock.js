@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { getRandomInteger } from '../utils/common/getRandomInteger.js';
-import { getRandomArrayElement } from '../utils/getRandomArrayElement.js';
+import { getRandomArrayElement } from '../utils/common/getRandomArrayElement.js';
 import { EMOTIONS } from '../const.js';
 
 const COMMENT_MIN_COUNT = 0;

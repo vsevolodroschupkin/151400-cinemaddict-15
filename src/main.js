@@ -11,14 +11,14 @@ import NoMovieView from './view/no-movie.js';
 import { generateMoviesArray, getMovieComments, generateCommentsForMovies } from './mock/movie-mock.js';
 import { generateProfile } from './mock/profile-mock.js';
 import { generateFilter } from './utils/movie/filters.js';
-import { RenderPosition } from './utils/renderPosition.js';
-import { render } from './utils/render.js';
+import { RenderPosition } from './utils/render/renderPosition.js';
+import { render } from './utils/render/render.js';
 import { isEscEvent } from './utils/common/isEscEvent.js';
 
 const CARD_COUNT_PER_STEP = 5;
 const CARD_COUNT_RATED_LIST = 2;
 const CARD_COUNT_COMMENTED_LIST = 2;
-const MOVIE_COUNT = 0;
+const MOVIE_COUNT = 20;
 
 const movies = generateMoviesArray(MOVIE_COUNT);
 const comments = generateCommentsForMovies(movies);

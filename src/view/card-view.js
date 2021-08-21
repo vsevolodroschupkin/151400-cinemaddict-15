@@ -1,7 +1,7 @@
 import Abstract from './abstract.js';
 import dayjs from 'dayjs';
 import { getFormattedDuration } from '../utils/movie/getFormattedDuration.js';
-import { getFormattedDescription } from '../utils/getFormattedDescription.js';
+import { getFormattedDescription } from '../utils/movie/getFormattedDescription.js';
 
 const createCardTemplate = (movie) => {
   const {filmInfo, comments} = movie;

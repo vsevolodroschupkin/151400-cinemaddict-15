@@ -1,8 +1,8 @@
 import { getRandomInteger } from '../utils/common/getRandomInteger.js';
 import { getRandomFloat } from '../utils/common/getRandomFloat.js';
-import { getRandomArrayElement } from '../utils/getRandomArrayElement.js';
+import { getRandomArrayElement } from '../utils/common/getRandomArrayElement.js';
 import { generateCommentsArray } from './comments-mock.js';
-import { getRandomBoolean } from '../utils/getRandomBoolean.js';
+import { getRandomBoolean } from '../utils/common/getRandomBoolean.js';
 
 const POSTERS = [
   'made-for-each-other.png',

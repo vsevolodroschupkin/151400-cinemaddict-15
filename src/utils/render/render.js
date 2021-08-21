@@ -1,4 +1,4 @@
-import Abstract from '../view/abstract.js';
+import Abstract from '../../view/abstract.js';
 import { RenderPosition } from './renderPosition.js';
 
 export const render = (container, element, place) => {

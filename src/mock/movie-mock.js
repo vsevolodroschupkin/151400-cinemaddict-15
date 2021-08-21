@@ -1,5 +1,5 @@
-import { getRandomInteger } from '../utils/getRandomInteger.js';
-import { getRandomFloat } from '../utils/getRandomFloat.js';
+import { getRandomInteger } from '../utils/common/getRandomInteger.js';
+import { getRandomFloat } from '../utils/common/getRandomFloat.js';
 import { getRandomArrayElement } from '../utils/getRandomArrayElement.js';
 import { generateCommentsArray } from './comments-mock.js';
 import { getRandomBoolean } from '../utils/getRandomBoolean.js';

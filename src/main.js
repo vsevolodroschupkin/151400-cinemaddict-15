@@ -10,10 +10,10 @@ import PopupView from './view/popup.js';
 import NoMovieView from './view/no-movie.js';
 import { generateMoviesArray, getMovieComments, generateCommentsForMovies } from './mock/movie-mock.js';
 import { generateProfile } from './mock/profile-mock.js';
-import { generateFilter } from './utils/filters.js';
+import { generateFilter } from './utils/movie/filters.js';
 import { RenderPosition } from './utils/renderPosition.js';
 import { render } from './utils/render.js';
-import { isEscEvent } from './utils/isEscEvent.js';
+import { isEscEvent } from './utils/common/isEscEvent.js';
 
 const CARD_COUNT_PER_STEP = 5;
 const CARD_COUNT_RATED_LIST = 2;

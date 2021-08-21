@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { EMOTIONS } from '../const.js';
 import { getFormattedDescription } from '../utils/getFormattedDescription.js';
-import { getFormattedDuration } from '../utils/getFormattedDuration.js';
+import { getFormattedDuration } from '../utils/movie/getFormattedDuration.js';
 import Abstract from './abstract.js';
 
 const createPopupTemplate = (movie, commentsArray) => {

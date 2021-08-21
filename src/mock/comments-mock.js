@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getRandomInteger } from '../utils/getRandomInteger.js';
+import { getRandomInteger } from '../utils/common/getRandomInteger.js';
 import { getRandomArrayElement } from '../utils/getRandomArrayElement.js';
 import { EMOTIONS } from '../const.js';
 

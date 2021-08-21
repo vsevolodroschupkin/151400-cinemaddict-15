@@ -168,10 +168,21 @@ export default class Popup extends Abstract {
     super();
     this._movie = movie;
     this._comments = comments;
+    this._popupCloseHandler = this._popupCloseHandler.bind(this);
   }
 
   getTemplate() {
     return createPopupTemplate(this._movie, this._comments);
+  }
+
+  _popupCloseHandler(evt) {
+    evt.preventDefault();
+    this._callback.popupClose();
+  }
+
+  setPopupCloseHandler(callback) {
+    this._callback.popupClose = callback;
+    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._popupCloseHandler);
   }
 
 }

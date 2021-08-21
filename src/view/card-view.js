@@ -38,9 +38,30 @@ export default class Card extends Abstract {
   constructor(movie) {
     super();
     this._movie = movie;
+    this._popupOpenHandler = this._popupOpenHandler.bind(this);
   }
 
   getTemplate() {
     return createCardTemplate(this._movie);
   }
+
+  _popupOpenHandler (evt) {
+    evt.preventDefault();
+    if(!document.querySelector('.film-details')){
+      this._callback.popupOpen();
+    }
+  }
+
+  setPopupOpenHandler(callback) {
+    this._callback.popupOpen = callback;
+
+    const cardCover = this.getElement().querySelector('.film-card__poster');
+    const cardTitle = this.getElement().querySelector('.film-card__title');
+    const cardComments = this.getElement().querySelector('.film-card__comments');
+
+    const cardElements = [cardCover, cardTitle, cardComments];
+
+    cardElements.forEach((element) => element.addEventListener('click', this._popupOpenHandler));
+  }
+
 }

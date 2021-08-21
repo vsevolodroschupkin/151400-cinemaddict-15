@@ -18,7 +18,7 @@ import { isEscEvent } from './utils/isEscEvent.js';
 const CARD_COUNT_PER_STEP = 5;
 const CARD_COUNT_RATED_LIST = 2;
 const CARD_COUNT_COMMENTED_LIST = 2;
-const MOVIE_COUNT = 10;
+const MOVIE_COUNT = 0;
 
 const movies = generateMoviesArray(MOVIE_COUNT);
 const comments = generateCommentsForMovies(movies);
@@ -32,7 +32,7 @@ const headerElement = document.querySelector('.header');
 const footerElement = document.querySelector('.footer');
 const mainElement = document.querySelector('.main');
 
-const openPopup = (card, commentsArray) => {
+const openPopup = (card, commentsArray) => () => {
   const popupComponent = new PopupView(card, getMovieComments(card, commentsArray));
 
   const closePopup = (cb) => {
@@ -40,49 +40,28 @@ const openPopup = (card, commentsArray) => {
     document.body.removeEventListener('keydown', cb);
     document.body.classList.remove('hide-overflow');
   };
-
   const onPopupEscKeydown = (evt) => {
     if(isEscEvent(evt)) {
       evt.preventDefault();
       closePopup(onPopupEscKeydown);
     }
   };
-  const onPopupCloseButtonClick = (evt) => {
-    evt.preventDefault();
+  const onPopupCloseButtonClick = () => {
     closePopup(onPopupEscKeydown);
   };
 
-  popupComponent
-    .getElement()
-    .querySelector('.film-details__close-btn')
-    .addEventListener('click', onPopupCloseButtonClick);
+  popupComponent.setPopupCloseHandler(onPopupCloseButtonClick);
 
   document.body.appendChild(popupComponent.getElement());
   document.body.classList.add('hide-overflow');
   document.body.addEventListener('keydown', onPopupEscKeydown);
-
-
 };
 
 const renderCard = (cardListElement, card) => {
   const cardComponent = new CardView(card);
 
-  const cardCover = cardComponent.getElement().querySelector('.film-card__poster');
-  const cardTitle = cardComponent.getElement().querySelector('.film-card__title');
-  const cardComments = cardComponent.getElement().querySelector('.film-card__comments');
-
-  const cardElements = [cardCover, cardTitle, cardComments];
-  const addListeners = (element) => element.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    if(!document.querySelector('.film-details')){
-      openPopup(card, comments);
-    }
-  });
-
-  cardElements
-    .forEach((element) => addListeners(element));
-
-  render(cardListElement, cardComponent.getElement(), RenderPosition.BEFOREEND);
+  cardComponent.setPopupOpenHandler(openPopup(card, comments));
+  render(cardListElement, cardComponent, RenderPosition.BEFOREEND);
 };
 
 render(headerElement, new ProfileView(profile), RenderPosition.BEFOREEND);
@@ -93,7 +72,7 @@ render(mainElement, new ContentView, RenderPosition.BEFOREEND);
 const contentContainer = mainElement.querySelector('.films');
 
 if (!movies.length) {
-  render(contentContainer, new NoMovieView(), RenderPosition.AFTERBEGIN);
+  render(contentContainer, new NoMovieView, RenderPosition.AFTERBEGIN);
 } else {
   const FILM_CONTAINERS_META = [
     {
@@ -130,11 +109,11 @@ if (movies.length > CARD_COUNT_PER_STEP) {
   const filmsMainList = mainElement.querySelector('.films-list:nth-child(1)');
   const filmsMainListContainer = mainElement.querySelector('.films-list:nth-child(1) .films-list__container');
 
-  render(filmsMainList, new ShowMoreButtonView, RenderPosition.BEFOREEND);
+  const showMoreButtonComponent = new ShowMoreButtonView();
 
-  const loadMoreButton = filmsMainList.querySelector('.films-list__show-more');
-  loadMoreButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
+  render(filmsMainList, showMoreButtonComponent, RenderPosition.BEFOREEND);
+
+  showMoreButtonComponent.setClickHandler(() => {
     movies
       .slice(renderedMovieCards, renderedMovieCards + CARD_COUNT_PER_STEP)
       .forEach((card) => render(filmsMainListContainer, new CardView(card), RenderPosition.BEFOREEND));
@@ -142,12 +121,10 @@ if (movies.length > CARD_COUNT_PER_STEP) {
     renderedMovieCards += CARD_COUNT_PER_STEP;
 
     if ( renderedMovieCards >= movies.length) {
-      loadMoreButton.remove();
+      showMoreButtonComponent.remove();
     }
 
   });
-
 }
 
 render(footerElement, new FooteStatisticsView(movies.length), RenderPosition.BEFOREEND);
-

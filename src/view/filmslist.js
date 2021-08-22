@@ -28,3 +28,7 @@ export default class Filmslist extends Abstract {
   }
 
 }
+
+// TODO: имя класса - MoviesList
+// TODO: имя файла - movies-list.js
+// TODO: creatFilmslistTemplate=>creatMoviesListTemplate

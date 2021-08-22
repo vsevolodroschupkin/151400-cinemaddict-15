@@ -4,3 +4,5 @@ export const createElement = (template) => {
 
   return newElement.firstChild;
 };
+
+// TODO: render.js

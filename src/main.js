@@ -32,6 +32,8 @@ const headerElement = document.querySelector('.header');
 const footerElement = document.querySelector('.footer');
 const mainElement = document.querySelector('.main');
 
+// TODO: commentsArray=>comments
+// Б9. В названии переменных не используется тип данных.
 const openPopup = (card, commentsArray) => () => {
   const popupComponent = new PopupView(card, getMovieComments(card, commentsArray));
 
@@ -66,14 +68,18 @@ const renderCard = (cardListElement, card) => {
 
 render(headerElement, new ProfileView(profile), RenderPosition.BEFOREEND);
 render(mainElement, new MainNavView(filters), RenderPosition.BEFOREEND);
+// TODO: скобки при создании объекта
 render(mainElement, new SortingView, RenderPosition.BEFOREEND);
 render(mainElement, new ContentView, RenderPosition.BEFOREEND);
 
 const contentContainer = mainElement.querySelector('.films');
 
+// TODO: сразу return, без else
 if (!movies.length) {
   render(contentContainer, new NoMovieView, RenderPosition.AFTERBEGIN);
 } else {
+  // TODO: достаточно перечисления FilmTitles
+  // TODO: не рендерить в цикле, лучше по отдельности
   const FILM_CONTAINERS_META = [
     {
       title: 'All movies. Upcoming',
@@ -106,6 +112,9 @@ if (!movies.length) {
 
 if (movies.length > CARD_COUNT_PER_STEP) {
   let renderedMovieCards = CARD_COUNT_PER_STEP;
+  // TODO: получать лист через getContainer
+  // const moviesListView = new MovieslistView(ListTitle.ALL, false)
+  // const container = moviesListView.getContainer()
   const filmsMainList = mainElement.querySelector('.films-list:nth-child(1)');
   const filmsMainListContainer = mainElement.querySelector('.films-list:nth-child(1) .films-list__container');
 
@@ -113,6 +122,7 @@ if (movies.length > CARD_COUNT_PER_STEP) {
 
   render(filmsMainList, showMoreButtonComponent, RenderPosition.BEFOREEND);
 
+  // TODO: использовать функцию renderCard, иначе попап не открывается
   showMoreButtonComponent.setClickHandler(() => {
     movies
       .slice(renderedMovieCards, renderedMovieCards + CARD_COUNT_PER_STEP)
@@ -128,3 +138,26 @@ if (movies.length > CARD_COUNT_PER_STEP) {
 }
 
 render(footerElement, new FooteStatisticsView(movies.length), RenderPosition.BEFOREEND);
+
+// TODO: структура файла
+
+// renderHeader()
+// renderMoviesBoard()
+// renderFooter()
+
+// вспомогательные функции:
+// renderNoMovies
+// renderMainMoviesList
+// renderTopRatedMoviesList
+// rendetMostCommentedMoviesList
+// renderMovieCard
+
+
+// TODO: баги
+// - не открывается попап на фильмы, которые отрисовываются по load more
+// - не выводится ранг пользователя в зависимости от количества фильмов
+
+// TODO: использовать в наименованиях или film или movie, чтобы было единообразно
+
+// Рекомендации:
+// - делать пока без доп. списков фильмов

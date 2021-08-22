@@ -4,3 +4,5 @@ export const getFormattedDuration = (duration) => {
 
   return `${durationHours} ${durationMinutes}`;
 };
+
+// TODO: movies.js

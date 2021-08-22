@@ -14,3 +14,6 @@ export default class NoMovie extends Abstract {
     return createNoMovieTemplate();
   }
 }
+
+// TODO: имя класса NoMovie=>NoMovies
+// TODO: имя файла no-movie=>no-movies

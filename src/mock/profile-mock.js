@@ -3,3 +3,5 @@ export const generateProfile = () => ({
   profileTitle: 'Movie Buff',
   avatar: 'images/bitmap@2x.png',
 });
+
+// TODO: Удалить, profileTitle вычислять по количеству просмотренных фильмов, см. ТЗ.

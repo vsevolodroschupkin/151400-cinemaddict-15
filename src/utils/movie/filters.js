@@ -11,3 +11,5 @@ export const generateFilter = (movies) => Object.entries(moviesToFilterMap).map(
     count: countMovies(movies),
   }),
 );
+
+// TODO: здесь же добавить filterTitle чтобы не вычислять его через switch

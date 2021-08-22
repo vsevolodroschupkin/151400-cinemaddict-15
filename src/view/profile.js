@@ -1,5 +1,6 @@
 import Abstract from './abstract.js';
 
+// TODO: передавать только profile rating
 const createProfileTemplate = (profile) => {
 
   const {profileTitle} = profile;

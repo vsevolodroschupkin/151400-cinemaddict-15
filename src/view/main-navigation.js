@@ -3,6 +3,7 @@ import Abstract from './abstract.js';
 const createMainNavItem = (filter) => {
   const {name, count} = filter;
 
+  // TODO: передавать title сразу в filter
   let itemName = '';
   switch (name) {
     case 'all' :

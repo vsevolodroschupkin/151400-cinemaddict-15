@@ -22,3 +22,5 @@ export const render = (container, element, place) => {
       break;
   }
 };
+
+// TODO: render.js

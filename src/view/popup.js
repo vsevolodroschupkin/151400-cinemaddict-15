@@ -4,9 +4,12 @@ import { getFormattedDescription } from '../utils/movie/getFormattedDescription.
 import { getFormattedDuration } from '../utils/movie/getFormattedDuration.js';
 import Abstract from './abstract.js';
 
+// TODO: commentsArray=>comments
+// Б9. В названии переменных не используется тип данных.
 const createPopupTemplate = (movie, commentsArray) => {
   const {filmInfo, comments} = movie;
 
+  // TODO: деструктурировать filmInfo
   const title = filmInfo.title;
   const alternativeTitle = filmInfo.alternativeTitle;
   const rating = filmInfo.totalRating;
@@ -18,14 +21,19 @@ const createPopupTemplate = (movie, commentsArray) => {
   const director = filmInfo.director;
   const writers = filmInfo.writers.join(', ');
   const actors = filmInfo.actors.join(', ');
+  // TODO: daysjs только в файле dates.js.
+  // Получение форматированной даты в файле movies.js, getFormattedReleaseDate
   const releaseDate = dayjs(filmInfo.release.date).format('mm MMMM YYYY');
   const country = filmInfo.release.releaseCountry;
   const ageRating = filmInfo.ageRating;
 
+  // TODO: ТЗ - Фильм может относиться к нескольким жанрам. Если фильм относится к нескольким жанрам, выводите «Genres», иначе «Genre».
   const genresTempalate = genre.map((element) => `<span class="film-details__genre">${element}</span>`).join(' ');
 
+  // TODO: вынести на верхний уровень
   const createCommentItemTemplate = (comment) => {
     const {emotion, comment: text, author, date} = comment;
+    // TODO: daysjs только в файле dates.js.
     const commentDate = dayjs(date).format('YYYY/MM/DD hh:mm');
 
     return `<li class="film-details__comment">
@@ -43,6 +51,7 @@ const createPopupTemplate = (movie, commentsArray) => {
     </li>`;
   };
 
+  // TODO: вынести на верхний уровень
   const createCommentsTemplate = (array) => {
 
     if(array.length === 0){
@@ -58,8 +67,11 @@ const createPopupTemplate = (movie, commentsArray) => {
       </ul>`;
   };
 
+  // TODO: commentsArray=>comments
+  // Б9. В названии переменных не используется тип данных.
   const commentsTemplate = createCommentsTemplate(commentsArray);
 
+  // TODO: вынести на верхний уровень
   const createEmotionsTemplate = (emotions) => emotions
     .map((emotion) => `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}">
       <label class="film-details__emoji-label" for="emoji-${emotion}">
@@ -186,3 +198,7 @@ export default class Popup extends Abstract {
   }
 
 }
+
+// TODO: имя класса MovieDetails
+// TODO: _popupCloseHandler=>_closeClickHandler
+// TODO: setPopupCloseHandler=>setCloseClickHandler

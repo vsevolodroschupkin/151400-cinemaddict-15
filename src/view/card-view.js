@@ -6,6 +6,8 @@ import { getFormattedDescription } from '../utils/movie/getFormattedDescription.
 const createCardTemplate = (movie) => {
   const {filmInfo, comments} = movie;
 
+  // TODO: Деструктурировать filmInfo
+  // const {title, totalRating, runtime... } = filmInfo
   const title = filmInfo.title;
   const rating = filmInfo.totalRating;
   const year = dayjs(filmInfo.release.date).format('YYYY');
@@ -13,6 +15,8 @@ const createCardTemplate = (movie) => {
   const genre = filmInfo.genre[0];
   const url = filmInfo.poster;
   const description = getFormattedDescription(filmInfo.description);
+
+  // TODO: В каком случае может не быть поля comments?
   const commentsQuantity = comments ? comments.length : '0';
 
   return `<article class="film-card">
@@ -47,6 +51,7 @@ export default class Card extends Abstract {
 
   _popupOpenHandler (evt) {
     evt.preventDefault();
+    // TODO: для чего это условие?
     if(!document.querySelector('.film-details')){
       this._callback.popupOpen();
     }
@@ -65,3 +70,6 @@ export default class Card extends Abstract {
   }
 
 }
+
+// TODO: Нужны сеттеры для клика для Add to watchlist, Mark as watched, Mark as favorite
+// TODO: имя файла - card.js

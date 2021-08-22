@@ -40,13 +40,21 @@ const SCORE_DIGIT = 1;
 const MIN_RUNTIME = 1;
 const MAX_RUNTIME = 1000;
 
+// TODO: Можно объединить константы в перечисление
+// const Runtime = {MIX: 1, MAX: 1000}
+// есть критерий, но моки все равно удалятся, так что не критично
+// Б16. Сложные составные константы собираются в перечисления Enum.
+
+// TODO: RELEASE_DATE_FROM, RELEASE_DATE_TO
 const MOVIE_START_YEAR = '1895';
 const MOVIE_END_YEAR = '2021';
 
+// TODO: Лучше назвать generateReleaseDate
 const generateRandomDate = () => new Date(getRandomInteger(MOVIE_START_YEAR, MOVIE_END_YEAR),getRandomInteger(0, 11), getRandomInteger(0, 28));
 
 const generateScore = () => (getRandomFloat(MAX_SCORE, MIN_SCORE, SCORE_DIGIT));
 
+// TODO: getRandomArrayElement вместо getRandomInteger
 const generatePosterUrl = () => (`./images/posters/${POSTERS[getRandomInteger(0, POSTERS.length - 1)]}`);
 
 const generateDescription = () => {
@@ -59,8 +67,14 @@ const generateDescription = () => {
   }
 
   return description.join(' ');
+
+  // TODO: в одно действие, 5 - можно в константу
+  // return new Array(getRandomInteger(1, 5)).fill()
+  //   .map(() => getRandomArrayElement(DESCRIPTION_PHRASES))
+  //   .join(' ');
 };
 
+// TODO: не нужны отдельные однострочные функции, можно сразу в generateMovie
 const generateRuntime = () => getRandomInteger(MIN_RUNTIME, MAX_RUNTIME);
 
 const generateCountry = () => getRandomArrayElement(COUNTRIES);
@@ -112,8 +126,11 @@ const generateMovie = () => (
   }
 );
 
+// TODO: Удалить Array из наименования функции
 export const generateMoviesArray = (count) => new Array(count).fill().map(generateMovie);
 
+// TODO: перенести в файл movies.js или comments.js
+// моки со временем удалятся, а эта функция понадобится
 export const getMovieComments = (movie, comments) => {
   const commentIds = movie.comments;
   return comments.filter((item) => commentIds.includes(item.id));
@@ -128,3 +145,6 @@ export const generateCommentsForMovies = (movies) => {
   });
   return comments;
 };
+
+// TODO: халтура с генерацией жанров, авторов =)
+// TODO: убрать mock из наименования файла, т.к есть есть название папки

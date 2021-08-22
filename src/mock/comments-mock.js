@@ -22,6 +22,8 @@ const MIN_DAYS_GAP = 0;
 const generateCommentEmotion = () => getRandomArrayElement(EMOTIONS);
 const generateCommentText = () => getRandomArrayElement(COMMENTS);
 const generateAuthor = () => getRandomArrayElement(AUTHORS);
+
+// TODO: Вынести в модуль dates.js функцию addDaysToDate(date, daysCount), чтобы dayjs был только в одном модуле
 const generateCommentDate = () => dayjs().add(getRandomInteger(MIN_DAYS_GAP, MAX_DAYS_GAP), 'days').toDate() ;
 
 let commentId = 0;
@@ -29,6 +31,7 @@ let commentId = 0;
 const generateComment = () => (
   {
     id: commentId++,
+    // TODO: Можно не делать отдельную фунцию generateAuthor, вставить сразу getRandomArrayElement
     author: generateAuthor(),
     comment: generateCommentText(),
     date: generateCommentDate(),
@@ -36,8 +39,14 @@ const generateComment = () => (
   }
 );
 
+// TODO: Не нужно писать тип данных 'Array'
 export const generateCommentsArray = () => {
   const commentsQuantity = getRandomInteger(COMMENT_MIN_COUNT, COMMENT_MAX_COUNT);
+  // TODO: Можно просто передать функцию generateComment
   return new Array(commentsQuantity).fill().map(() => generateComment());
 };
+
+// TODO: Удалить закомментированный код
 //.substract(getRandomInteger(MIN_DAYS_GAP, MAX_DAYS_GAP), 'day').toDate()
+
+// TODO: убрать mock из наименования файла, т.к есть есть название папки

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { EMOTIONS } from '../const.js';
-import { getFormattedDescription } from '../utils/movie/getFormattedDescription.js';
-import { getFormattedDuration } from '../utils/movie/getFormattedDuration.js';
+import { getFormattedCommentDate } from '../utils/dates.js';
+import { getFormattedDescription, getFormattedDuration } from '../utils/movies.js';
 import Abstract from './abstract.js';
 
 // TODO: commentsArray=>comments
@@ -34,7 +34,7 @@ const createPopupTemplate = (movie, commentsArray) => {
   const createCommentItemTemplate = (comment) => {
     const {emotion, comment: text, author, date} = comment;
     // TODO: daysjs только в файле dates.js.
-    const commentDate = dayjs(date).format('YYYY/MM/DD hh:mm');
+    const commentDate = getFormattedCommentDate(date);
 
     return `<li class="film-details__comment">
       <span class="film-details__comment-emoji">

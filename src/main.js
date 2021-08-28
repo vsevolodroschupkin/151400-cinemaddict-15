@@ -3,27 +3,27 @@ import MainNavView from './view/main-navigation.js';
 import SortingView from './view/sorting.js';
 import ContentView from './view/content.js';
 import FilmslistView from './view/filmslist.js';
-import CardView from './view/card-view.js';
+import CardView from './view/card.js';
 import ShowMoreButtonView from './view/show-more-button.js';
 import FooteStatisticsView from './view/footer-statistics.js';
 import PopupView from './view/popup.js';
-import NoMovieView from './view/no-movie.js';
-import { generateMoviesArray, getMovieComments, generateCommentsForMovies } from './mock/movie-mock.js';
-import { generateProfile } from './mock/profile-mock.js';
-import { generateFilter } from './utils/movie/filters.js';
-import { RenderPosition } from './utils/render/renderPosition.js';
-import { render } from './utils/render/render.js';
-import { isEscEvent } from './utils/common/isEscEvent.js';
+import NoMoviesView from './view/no-movies.js';
+import { generateFilter } from './utils/filters.js';
+import { RenderPosition, render } from './utils/render.js';
+import { isEscEvent } from './utils/common.js';
+import { getMovieComments } from './utils/movies.js';
+import { generateMovies, generateCommentsForMovies } from './mock/movie.js';
 
 const CARD_COUNT_PER_STEP = 5;
 const CARD_COUNT_RATED_LIST = 2;
 const CARD_COUNT_COMMENTED_LIST = 2;
 const MOVIE_COUNT = 20;
 
-const movies = generateMoviesArray(MOVIE_COUNT);
+
+const movies = generateMovies(MOVIE_COUNT);
+const watchedMoviesCount = movies.filter((it) => it.userDetails.alreadyWatched).length;
 const comments = generateCommentsForMovies(movies);
 
-const profile = generateProfile();
 const filters = generateFilter(movies);
 
 const cardsCount = Math.min(movies.length, CARD_COUNT_PER_STEP);
@@ -32,10 +32,8 @@ const headerElement = document.querySelector('.header');
 const footerElement = document.querySelector('.footer');
 const mainElement = document.querySelector('.main');
 
-// TODO: commentsArray=>comments
-// Б9. В названии переменных не используется тип данных.
-const openPopup = (card, commentsArray) => () => {
-  const popupComponent = new PopupView(card, getMovieComments(card, commentsArray));
+const openPopup = (card, movieComments) => () => {
+  const popupComponent = new PopupView(card, getMovieComments(card, movieComments));
 
   const closePopup = (cb) => {
     popupComponent.getElement().remove();
@@ -66,17 +64,17 @@ const renderCard = (cardListElement, card) => {
   render(cardListElement, cardComponent, RenderPosition.BEFOREEND);
 };
 
-render(headerElement, new ProfileView(profile), RenderPosition.BEFOREEND);
+render(headerElement, new ProfileView(watchedMoviesCount), RenderPosition.BEFOREEND);
 render(mainElement, new MainNavView(filters), RenderPosition.BEFOREEND);
 // TODO: скобки при создании объекта
-render(mainElement, new SortingView, RenderPosition.BEFOREEND);
-render(mainElement, new ContentView, RenderPosition.BEFOREEND);
+render(mainElement, new SortingView(), RenderPosition.BEFOREEND);
+render(mainElement, new ContentView(), RenderPosition.BEFOREEND);
 
 const contentContainer = mainElement.querySelector('.films');
 
 // TODO: сразу return, без else
 if (!movies.length) {
-  render(contentContainer, new NoMovieView, RenderPosition.AFTERBEGIN);
+  render(contentContainer, new NoMoviesView(), RenderPosition.AFTERBEGIN);
 } else {
   // TODO: достаточно перечисления FilmTitles
   // TODO: не рендерить в цикле, лучше по отдельности

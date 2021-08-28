@@ -1,24 +1,25 @@
 import Abstract from './abstract.js';
 
 // TODO: передавать только profile rating
-const createProfileTemplate = (profile) => {
+const createProfileTemplate = (rank) => (
 
-  const {profileTitle} = profile;
-
-  return `<section class="header__profile profile">
-    <p class="profile__rating">${profileTitle}</p>
+  `<section class="header__profile profile">
+    <p class="profile__rating">${rank}</p>
     <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-  </section>`;
-};
+  </section>`
+);
 
 export default class Profile extends Abstract {
-  constructor(profile) {
+  constructor(profileRating) {
     super();
-    this._profile = profile;
+    this._profileRating = profileRating;
   }
 
   getTemplate() {
-    return createProfileTemplate(this._profile);
+    return createProfileTemplate(this._profileRating);
   }
 
 }
+
+// TODO: Удалить, profileTitle вычислять по количеству просмотренных фильмов, см. ТЗ.
+

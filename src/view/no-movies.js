@@ -1,6 +1,6 @@
 import Abstract from './abstract.js';
 
-const createNoMovieTemplate = () => {
+const createNoMoviesTemplate = () => {
 
   const message = 'message about no movies';
 
@@ -9,11 +9,8 @@ const createNoMovieTemplate = () => {
     </section> `;
 };
 
-export default class NoMovie extends Abstract {
+export default class NoMovies extends Abstract {
   getTemplate() {
-    return createNoMovieTemplate();
+    return createNoMoviesTemplate();
   }
 }
-
-// TODO: имя класса NoMovie=>NoMovies
-// TODO: имя файла no-movie=>no-movies

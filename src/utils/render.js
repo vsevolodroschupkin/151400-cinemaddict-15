@@ -1,5 +1,10 @@
-import Abstract from '../../view/abstract.js';
-import { RenderPosition } from './renderPosition.js';
+import Abstract from '../view/abstract.js';
+
+export const RenderPosition = {
+  AFTERBEGIN: 'afterbegin',
+  BEFOREEND: 'beforeend',
+  AFTEREND: 'afterend',
+};
 
 export const render = (container, element, place) => {
   if (container instanceof Abstract) {
@@ -23,4 +28,9 @@ export const render = (container, element, place) => {
   }
 };
 
-// TODO: render.js
+export const createElement = (template) => {
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};

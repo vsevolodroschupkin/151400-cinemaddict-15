@@ -11,6 +11,18 @@ const GENRES = [
   'Animation',
   'Horror',
   'Action',
+  'Thriller',
+  'Family',
+  'Slasher',
+  'RomCom',
+];
+const WRITERS = [
+  'Billy Wilder',
+  'Ethan Coen and Joel Coen',
+  'Robert Towne',
+  'Quentin Tarantino',
+  'Francis Ford Coppola',
+  'William Goldman',
 ];
 const COUNTRIES = [
   'USA',
@@ -59,9 +71,13 @@ const generateDescription = () => new Array(getRandomInteger(1, 5)).fill()
   .map(() => getRandomArrayElement(DESCRIPTION_PHRASES))
   .join(' ');
 
-const generateGenres = () => new Array(getRandomInteger(1, GENRES.length - 1)).fill()
-  .map(() => getRandomArrayElement(GENRES))
-  .join(', ');
+const generateGenres = () => new Array(getRandomInteger(1, GENRES.length - 1))
+  .fill()
+  .map(() => getRandomArrayElement(GENRES));
+
+const generateWriters = () => new Array(getRandomInteger(1, WRITERS.length - 1))
+  .fill()
+  .map(() => getRandomArrayElement(WRITERS));
 
 let movieId = MOVIE_START_ID;
 
@@ -76,11 +92,7 @@ const generateMovie = () => (
       poster: generatePosterUrl(),
       ageRating: getRandomArrayElement(AGE_RATINGS),
       director: 'Directors name',
-      writers: [
-        'writer1',
-        'writer2',
-        'writer3',
-      ],
+      writers: generateWriters(),
       actors: [
         'actor1',
         'actor2',
@@ -115,5 +127,3 @@ export const generateCommentsForMovies = (movies) => {
   });
   return comments;
 };
-
-// TODO: халтура с генерацией жанров, авторов =)

@@ -21,7 +21,7 @@ const createCardTemplate = (movie) => {
       <span class="film-card__year">${releaseYear}</span>
       <span class="film-card__duration">${duration}</span>
       <span class="film-card__genre">${displayedGenre}</span>
-    </p>Ааа
+    </p>
     <img src=${poster} alt="${title}" class="film-card__poster">
     <p class="film-card__description">${formattedDescription}</p>
     <a class="film-card__comments">${commentsQuantity} ${commentsQuantity === 1 ? 'comment' : 'comments'}</a>
@@ -37,23 +37,41 @@ export default class Card extends Abstract {
   constructor(movie) {
     super();
     this._movie = movie;
-    this._popupOpenHandler = this._popupOpenHandler.bind(this);
+    this._openClickHandler = this._openClickHandler.bind(this);
+    this._addToWatchlistHandler = this._addToWatchlistHandler.bind(this);
+    this._addToFavoritesHandler = this._addToFavoritesHandler.bind(this);
+    this._markAsWatchedHandler = this._markAsWatchedHandler.bind(this);
   }
 
   getTemplate() {
     return createCardTemplate(this._movie);
   }
 
-  _popupOpenHandler (evt) {
+  _openClickHandler (evt) {
     evt.preventDefault();
     // TODO: для чего это условие?
     if(!document.querySelector('.film-details')){
-      this._callback.popupOpen();
+      this._callback.openClick();
     }
   }
 
-  setPopupOpenHandler(callback) {
-    this._callback.popupOpen = callback;
+  _addToWatchlistHandler (evt) {
+    evt.preventDefault();
+    this._callback.addToWatchlist();
+  }
+
+  _addToFavoritesHandler (evt) {
+    evt.preventDefault();
+    this._callback.addToFavorites();
+  }
+
+  _markAsWatchedHandler (evt) {
+    evt.preventDefault();
+    this._callback.markAsWatched();
+  }
+
+  setOpenClickHandler(callback) {
+    this._callback.openClick = callback;
 
     const cardCover = this.getElement().querySelector('.film-card__poster');
     const cardTitle = this.getElement().querySelector('.film-card__title');
@@ -61,10 +79,23 @@ export default class Card extends Abstract {
 
     const cardElements = [cardCover, cardTitle, cardComments];
 
-    cardElements.forEach((element) => element.addEventListener('click', this._popupOpenHandler));
+    cardElements.forEach((element) => element.addEventListener('click', this._openClickHandler));
+  }
+
+  setAddToWatchlistHandler (callback) {
+    this._callback.addToWatchlist = callback;
+    this.getElement().querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this._addToWatchlistHandler);
+  }
+
+  setAddToFavoritesHandler (callback) {
+    this._callback.addToFavorites = callback;
+    this.getElement().querySelector('.film-card__controls-item--favorite').addEventListener('click', this._addToFavoritesHandler);
+  }
+
+  setMarkAsWatchedHandler (callback) {
+    this._callback.markAsWatched = callback;
+    this.getElement().querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this._markAsWatchedHandler);
   }
 
 }
 
-// TODO: Нужны сеттеры для клика для Add to watchlist, Mark as watched, Mark as favorite
-// TODO: имя файла - card.js

@@ -1,6 +1,6 @@
 import Abstract from './abstract.js';
 
-const creatFilmslistTemplate = (title, isExtra) => {
+const creatMovieslistTemplate = (title, isExtra = false) => {
   const listTitle = title;
   const listExtraClass = isExtra ? 'films-list--extra' : '';
   const hiddenClass = !isExtra ? 'visually-hidden' : '';
@@ -11,7 +11,7 @@ const creatFilmslistTemplate = (title, isExtra) => {
   </section>`;
 };
 
-export default class Filmslist extends Abstract {
+export default class MoviesList extends Abstract {
   constructor(title, isExtra) {
     super();
     this._title = title;
@@ -20,7 +20,7 @@ export default class Filmslist extends Abstract {
   }
 
   getTemplate() {
-    return creatFilmslistTemplate(this._title, this._isExtra);
+    return creatMovieslistTemplate(this._title, this._isExtra);
   }
 
   getContainer() {
@@ -28,7 +28,3 @@ export default class Filmslist extends Abstract {
   }
 
 }
-
-// TODO: имя класса - MoviesList
-// TODO: имя файла - movies-list.js
-// TODO: creatFilmslistTemplate=>creatMoviesListTemplate

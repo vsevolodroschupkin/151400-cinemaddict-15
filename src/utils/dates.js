@@ -5,7 +5,7 @@ export const addDaysToDate = (date, daysCount) => dayjs().add(getRandomInteger(d
 
 export const getFormattedReleaseYear = (date) => dayjs(date).format('YYYY');
 
-export const getFormattedReleaseDate = (date) => dayjs(date).format('mm MMMM YYYY');
+export const getFormattedReleaseDate = (date) => dayjs(date).format('DD MMMM YYYY');
 
 export const getFormattedCommentDate = (date) => dayjs(date).format('YYYY/MM/DD hh:mm');
 

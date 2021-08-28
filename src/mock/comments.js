@@ -22,7 +22,6 @@ export const EMOTIONS = [
 
 const DAYS_GAP = 7;
 
-// TODO: Вынести в модуль dates.js функцию addDaysToDate(date, daysCount), чтобы dayjs был только в одном модуле
 const generateCommentDate = () => addDaysToDate(new Date(), getRandomInteger(0, DAYS_GAP)) ;
 
 let commentId = 0;

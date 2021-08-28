@@ -1,30 +1,13 @@
 import Abstract from './abstract.js';
 
 const createMainNavItem = (filter) => {
-  const {name, count} = filter;
-
-  // TODO: передавать title сразу в filter
-  let itemName = '';
-  switch (name) {
-    case 'all' :
-      itemName = 'All Movies';
-      break;
-    case 'watchlist':
-      itemName = 'Watchlist';
-      break;
-    case 'history':
-      itemName = 'History';
-      break;
-    case 'favorites':
-      itemName = 'Favorites';
-      break;
-  }
+  const {name, count, title } = filter;
 
   const itemCount = name === 'all' ? '' : ` <span class="main-navigation__item-count">${count}</span>`;
 
   return `<a
     href="#${name}"
-    class="main-navigation__item main-navigation__item">${itemName}${itemCount}
+    class="main-navigation__item main-navigation__item">${title}${itemCount}
     </a>`;
 };
 

@@ -2,7 +2,7 @@ import Abstract from './abstract.js';
 
 const createNoMoviesTemplate = () => {
 
-  const message = 'message about no movies';
+  const message = 'Here is no movies';
 
   return `<section class="films-list">
       <h2 class="films-list__title">${message}</h2>

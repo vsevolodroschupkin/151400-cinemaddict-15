@@ -12,4 +12,8 @@ export default class Content extends Abstract {
     return createContentTemplate();
   }
 
+  getContainer () {
+    return this.getElement();
+  }
+
 }

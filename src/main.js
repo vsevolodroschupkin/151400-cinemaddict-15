@@ -57,19 +57,10 @@ const renderMovieCard = (cardListElement, card) => {
   render(cardListElement, cardComponent, RenderPosition.BEFOREEND);
 };
 
-const renderMoviesBoard = (boardContainer, movies) => {
+const renderMovieslist = (container, movies) => {
   const cardsCount = Math.min(movies.length, CARD_COUNT_PER_STEP);
-  const contentTemplate = new ContentView();
-  render(boardContainer, contentTemplate, RenderPosition.BEFOREEND);
-
-  const contentContainer = contentTemplate.getContainer();
-
-  if (!movies.length) {
-    return render(contentContainer, new NoMoviesView(), RenderPosition.AFTERBEGIN);
-  }
-
   const movieslistTemplate = new MovieslistView(CONTAINER_TITLES.all);
-  render(contentContainer, movieslistTemplate, RenderPosition.BEFOREEND);
+  render(container, movieslistTemplate, RenderPosition.BEFOREEND);
 
   const filmsListContainer = movieslistTemplate.getContainer();
 
@@ -97,13 +88,25 @@ const renderMoviesBoard = (boardContainer, movies) => {
 
     });
   }
+};
+
+const renderMoviesBoard = (boardContainer, movies) => {
+
+  const contentTemplate = new ContentView();
+  render(boardContainer, contentTemplate, RenderPosition.BEFOREEND);
+
+  const contentContainer = contentTemplate.getContainer();
+
+  if (!movies.length) {
+    return render(contentContainer, new NoMoviesView(), RenderPosition.AFTERBEGIN);
+  }
+
+  renderMovieslist(contentContainer, movies);
 
 };
 
 render(headerElement, new ProfileView(getUserRank(generatedMovies)), RenderPosition.BEFOREEND);
 render(mainElement, new MainNavView(filters), RenderPosition.BEFOREEND);
 render(mainElement, new SortingView(), RenderPosition.BEFOREEND);
-
 renderMoviesBoard(mainElement, generatedMovies);
-
 render(footerElement, new FooteStatisticsView(generatedMovies.length), RenderPosition.BEFOREEND);

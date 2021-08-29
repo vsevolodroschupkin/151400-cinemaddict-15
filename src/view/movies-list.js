@@ -1,6 +1,6 @@
-import { createElement } from '../utils/createElement.js';
+import Abstract from './abstract.js';
 
-const creatFilmslistTemplate = (title, isExtra) => {
+const creatMovieslistTemplate = (title, isExtra = false) => {
   const listTitle = title;
   const listExtraClass = isExtra ? 'films-list--extra' : '';
   const hiddenClass = !isExtra ? 'visually-hidden' : '';
@@ -11,31 +11,20 @@ const creatFilmslistTemplate = (title, isExtra) => {
   </section>`;
 };
 
-export default class Filmslist {
+export default class MoviesList extends Abstract {
   constructor(title, isExtra) {
-    this._element = null;
+    super();
     this._title = title;
     this._isExtra = isExtra;
     this._container = null;
   }
 
   getTemplate() {
-    return creatFilmslistTemplate(this._title, this._isExtra);
-  }
-
-  getElement() {
-    if(!this._element){
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+    return creatMovieslistTemplate(this._title, this._isExtra);
   }
 
   getContainer() {
     return this.getElement().querySelector('.films-list__container');
   }
 
-  removeTemplate() {
-    this._element = null;
-  }
 }

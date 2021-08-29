@@ -1,28 +1,19 @@
-import { createElement } from '../utils/createElement.js';
+import Abstract from './abstract.js';
+
 
 const createContentTemplate = () => (
   `<section class="films">
   </section>`
 );
 
-export default class Content {
-  constructor() {
-    this._element = null;
-  }
+export default class Content extends Abstract {
 
   getTemplate() {
     return createContentTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  getContainer () {
+    return this.getElement();
   }
 
-  removeElement() {
-    this._element = null;
-  }
 }

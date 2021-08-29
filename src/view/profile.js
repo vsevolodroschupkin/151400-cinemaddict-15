@@ -1,34 +1,23 @@
-import { createElement } from '../utils/createElement.js';
+import Abstract from './abstract.js';
 
-const createProfileTemplate = (profile) => {
-
-  const {profileTitle} = profile;
+const createProfileTemplate = (rank) => {
+  const ranktemplate = rank === '' ? '' : `<p class="profile__rating">${rank}</p>` ;
 
   return `<section class="header__profile profile">
-    <p class="profile__rating">${profileTitle}</p>
-    <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-  </section>`;
+      ${ranktemplate}
+      <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
+    </section>`;
 };
 
-export default class Profile {
-  constructor(profile) {
-    this._profile = profile;
-    this._element = null;
+export default class Profile extends Abstract {
+  constructor(profileRating) {
+    super();
+    this._profileRating = profileRating;
   }
 
   getTemplate() {
-    return createProfileTemplate(this._profile);
+    return createProfileTemplate(this._profileRating);
   }
 
-  getElement() {
-    if(!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
+

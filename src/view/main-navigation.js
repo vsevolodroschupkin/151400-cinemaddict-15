@@ -1,29 +1,13 @@
-import { createElement } from '../utils/createElement.js';
+import Abstract from './abstract.js';
 
 const createMainNavItem = (filter) => {
-  const {name, count} = filter;
-
-  let itemName = '';
-  switch (name) {
-    case 'all' :
-      itemName = 'All Movies';
-      break;
-    case 'watchlist':
-      itemName = 'Watchlist';
-      break;
-    case 'history':
-      itemName = 'History';
-      break;
-    case 'favorites':
-      itemName = 'Favorites';
-      break;
-  }
+  const {name, count, title } = filter;
 
   const itemCount = name === 'all' ? '' : ` <span class="main-navigation__item-count">${count}</span>`;
 
   return `<a
     href="#${name}"
-    class="main-navigation__item main-navigation__item">${itemName}${itemCount}
+    class="main-navigation__item main-navigation__item">${title}${itemCount}
     </a>`;
 };
 
@@ -41,25 +25,14 @@ const createMainNavTemplate = (filters) => {
   </nav>`;
 };
 
-export default class MainNav {
+export default class MainNav extends Abstract {
   constructor(filters) {
+    super();
     this._filters = filters;
-    this._element = null;
   }
 
   getTemplate() {
     return createMainNavTemplate(this._filters);
   }
 
-  getElement() {
-    if(!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

@@ -1,72 +1,68 @@
-import dayjs from 'dayjs';
 import { EMOTIONS } from '../const.js';
-import { getFormattedDescription } from '../utils/getFormattedDescription.js';
-import { getFormattedDuration } from '../utils/getFormattedDuration.js';
-import { createElement } from '../utils/createElement.js';
+import { getFormattedCommentDate, getFormattedReleaseDate } from '../utils/dates.js';
+import { getFormattedDescription, getFormattedDuration } from '../utils/movies.js';
+import Abstract from './abstract.js';
 
-const createPopupTemplate = (movie, commentsArray) => {
-  const {filmInfo, comments} = movie;
+const createCommentItemTemplate = (comment) => {
+  const {emotion, comment: text, author, date} = comment;
+  const formattedDate = getFormattedCommentDate(date);
 
-  const title = filmInfo.title;
-  const alternativeTitle = filmInfo.alternativeTitle;
-  const rating = filmInfo.totalRating;
-  const duration = getFormattedDuration(filmInfo.runtime);
-  const genre = filmInfo.genre;
-  const url = filmInfo.poster;
-  const description = getFormattedDescription(filmInfo.description);
-  const commentsQuantity = comments ? comments.length : '0';
-  const director = filmInfo.director;
-  const writers = filmInfo.writers.join(', ');
-  const actors = filmInfo.actors.join(', ');
-  const releaseDate = dayjs(filmInfo.release.date).format('mm MMMM YYYY');
-  const country = filmInfo.release.releaseCountry;
-  const ageRating = filmInfo.ageRating;
+  return `<li class="film-details__comment">
+    <span class="film-details__comment-emoji">
+      <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-smile">
+    </span>
+    <div>
+      <p class="film-details__comment-text">${text}</p>
+      <p class="film-details__comment-info">
+        <span class="film-details__comment-author">${author}</span>
+        <span class="film-details__comment-day">${formattedDate}</span>
+        <button class="film-details__comment-delete">Delete</button>
+      </p>
+    </div>
+  </li>`;
+};
 
-  const genresTempalate = genre.map((element) => `<span class="film-details__genre">${element}</span>`).join(' ');
+const createCommentsTemplate = (comments) => {
 
-  const createCommentItemTemplate = (comment) => {
-    const {emotion, comment: text, author, date} = comment;
-    const commentDate = dayjs(date).format('YYYY/MM/DD hh:mm');
+  if(comments.length === 0){
+    return '';
+  }
 
-    return `<li class="film-details__comment">
-      <span class="film-details__comment-emoji">
-        <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-smile">
-      </span>
-      <div>
-        <p class="film-details__comment-text">${text}</p>
-        <p class="film-details__comment-info">
-          <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${commentDate}</span>
-          <button class="film-details__comment-delete">Delete</button>
-        </p>
-      </div>
-    </li>`;
-  };
-
-  const createCommentsTemplate = (array) => {
-
-    if(array.length === 0){
-      return '';
-    }
-
-    const template = array
-      .map((comment) => createCommentItemTemplate(comment))
-      .join('');
-
-    return `<ul class="film-details__comments-list">
-      ${template}
-      </ul>`;
-  };
-
-  const commentsTemplate = createCommentsTemplate(commentsArray);
-
-  const createEmotionsTemplate = (emotions) => emotions
-    .map((emotion) => `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}">
-      <label class="film-details__emoji-label" for="emoji-${emotion}">
-        <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
-      </label>`)
+  const template = comments
+    .map((comment) => createCommentItemTemplate(comment))
     .join('');
 
+  return `<ul class="film-details__comments-list">
+    ${template}
+    </ul>`;
+};
+
+const createEmotionsTemplate = (emotions) => emotions
+  .map((emotion) => `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}">
+    <label class="film-details__emoji-label" for="emoji-${emotion}">
+      <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
+    </label>`)
+  .join('');
+
+const createDetailsTemplate = (movie, movieComments) => {
+  const {filmInfo, comments} = movie;
+
+  const {title, alternativeTitle, totalRating, runtime, genre, poster, description, director, writers, actors, release, ageRating} = filmInfo;
+
+  const duration = getFormattedDuration(runtime);
+  const url = poster;
+  const formattedDescription = getFormattedDescription(description);
+  const commentsQuantity = comments ? comments.length : '0';
+  const movieWriters = writers.join(', ');
+  const movieActors = actors.join(', ');
+
+  const releaseDate = getFormattedReleaseDate(release.date);
+  const releaseCountry = release.releaseCountry;
+  const genresTerm = genre.length === 1 ? 'Genre' : 'Genres';
+
+  const genresTemplate = genre.map((element) => `<span class="film-details__genre">${element}</span>`).join(' ');
+
+  const commentsTemplate = createCommentsTemplate(movieComments);
   const emotionsTemplate = createEmotionsTemplate(EMOTIONS);
 
   return `<section class="film-details">
@@ -90,7 +86,7 @@ const createPopupTemplate = (movie, commentsArray) => {
               </div>
 
               <div class="film-details__rating">
-                <p class="film-details__total-rating">${rating}</p>
+                <p class="film-details__total-rating">${totalRating}</p>
               </div>
             </div>
 
@@ -101,11 +97,11 @@ const createPopupTemplate = (movie, commentsArray) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">${writers}</td>
+                <td class="film-details__cell">${movieWriters}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
-                <td class="film-details__cell">${actors}</td>
+                <td class="film-details__cell">${movieActors}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
@@ -117,18 +113,18 @@ const createPopupTemplate = (movie, commentsArray) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">${country}</td>
+                <td class="film-details__cell">${releaseCountry}</td>
               </tr>
               <tr class="film-details__row">
-                <td class="film-details__term">Genres</td>
+                <td class="film-details__term">${genresTerm}</td>
                 <td class="film-details__cell">
-                  ${genresTempalate}
+                  ${genresTemplate}
                 </td>
               </tr>
             </table>
 
             <p class="film-details__film-description">
-              ${description}
+              ${formattedDescription}
             </p>
           </div>
         </div>
@@ -163,26 +159,27 @@ const createPopupTemplate = (movie, commentsArray) => {
   </section>`;
 };
 
-export default class Popup {
+export default class MovieDetails extends Abstract {
   constructor(movie, comments) {
+    super();
     this._movie = movie;
     this._comments = comments;
-    this._element = null;
+    this._closeClickHandler = this._closeClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createPopupTemplate(this._movie, this._comments);
+    return createDetailsTemplate(this._movie, this._comments);
   }
 
-  getElement() {
-    if(!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _closeClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setCloseClickHandler(callback) {
+    this._callback.closeClick = callback;
+    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._closeClickHandler);
   }
+
 }
+

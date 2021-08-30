@@ -26,7 +26,11 @@ export default class MovieCatalog {
   }
 
   init(movies) {
-    this._movies = movies;
+    this._movies = movies.slice();
+
+    render(this._movieCatalogContainer, this._mainNavComponent, RenderPosition.BEFOREEND);
+    render(this._movieCatalogContainer, this._sortingComponent, RenderPosition.BEFOREEND);
+    this._renderMoviesBoard();
   }
 
   _renderProfile() {
@@ -41,16 +45,30 @@ export default class MovieCatalog {
 
   }
 
-  _renderMoviesBoard() {
-
-  }
-
   _renderLoadMoreButton() {
 
   }
 
   _renderNoMovies() {
 
+  }
+
+  _renderMoviesList() {
+
+  }
+
+  _renderMoviesBoard() {
+    const contentTemplate = new ContentView();
+    render(boardContainer, contentTemplate, RenderPosition.BEFOREEND);
+
+    const contentContainer = contentTemplate.getContainer();
+
+    if (!this._movies.length) {
+      this._renderNoMovies;
+      return;
+    }
+
+    this._renderMovieslist(contentContainer, this._movies);
   }
 
 }

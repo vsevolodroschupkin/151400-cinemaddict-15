@@ -1,3 +1,4 @@
+import MoviesBoardPresenter from './presenter/movies-board.js';
 import ProfileView from './view/profile.js';
 import MainNavView from './view/main-navigation.js';
 import SortingView from './view/sorting.js';
@@ -62,10 +63,10 @@ const renderMovieslist = (container, movies) => {
   const movieslistTemplate = new MovieslistView(CONTAINER_TITLES.all);
   render(container, movieslistTemplate, RenderPosition.BEFOREEND);
 
-  const filmsListContainer = movieslistTemplate.getContainer();
+  const moviesListContainer = movieslistTemplate.getContainer();
 
   for (let i = 0; i < cardsCount; i++) {
-    renderMovieCard(filmsListContainer, movies[i]);
+    renderMovieCard(moviesListContainer, movies[i]);
   }
 
   if (movies.length > CARD_COUNT_PER_STEP) {
@@ -73,12 +74,12 @@ const renderMovieslist = (container, movies) => {
 
     const showMoreButtonComponent = new ShowMoreButtonView();
 
-    render(filmsListContainer, showMoreButtonComponent, RenderPosition.AFTEREND);
+    render(moviesListContainer, showMoreButtonComponent, RenderPosition.AFTEREND);
 
     showMoreButtonComponent.setClickHandler(() => {
       movies
         .slice(renderedMovieCards, renderedMovieCards + CARD_COUNT_PER_STEP)
-        .forEach((card) => renderMovieCard(filmsListContainer, card));
+        .forEach((card) => renderMovieCard(moviesListContainer, card));
 
       renderedMovieCards += CARD_COUNT_PER_STEP;
 
@@ -107,6 +108,13 @@ const renderMoviesBoard = (boardContainer, movies) => {
 
 render(headerElement, new ProfileView(getUserRank(generatedMovies)), RenderPosition.BEFOREEND);
 render(mainElement, new MainNavView(filters), RenderPosition.BEFOREEND);
+
+//вот это область работы в пятом заданииmovies
 render(mainElement, new SortingView(), RenderPosition.BEFOREEND);
 renderMoviesBoard(mainElement, generatedMovies);
+
 render(footerElement, new FooteStatisticsView(generatedMovies.length), RenderPosition.BEFOREEND);
+
+//d идеале здесь должен повториться рендеринг по презентеру
+const moviesBoard = new MoviesBoardPresenter(mainElement);
+moviesBoard.init(generatedMovies, comments);

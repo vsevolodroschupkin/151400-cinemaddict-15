@@ -1,26 +1,23 @@
+import MoviePresenter from './movie.js';
 import SortingView from '../view/sorting.js';
 import ContentView from '../view/content.js';
 import MovieslistView from '../view/movies-list.js';
-import CardView from '../view/card.js';
 import ShowMoreButtonView from '../view/show-more-button.js';
-import MovieDetailsView from '../view/movie-details.js';
 import NoMoviesView from '../view/no-movies.js';
 import { RenderPosition, render, remove } from '../utils/render.js';
 import { CARD_COUNT_PER_STEP, CONTAINER_TITLES } from '../const.js';
-import { isEscEvent } from '../utils/common.js';
-import { getMovieComments } from '../utils/movies.js';
-
-
 export default class MoviesBoard {
   constructor (moviesBoardContainer){
     this._moviesBoardContainer = moviesBoardContainer;
+    this._renderedCardCount = CARD_COUNT_PER_STEP;
 
     this._sortingComponent = new SortingView();
-    this._contentComponent = new ContentView().getContainer();
-    this._moviesListComponent = new MovieslistView();
-    this._cardComponent = new CardView();
+    this._contentComponent = new ContentView();
+    this._moviesListComponent = new MovieslistView(CONTAINER_TITLES.all);
     this._showMoreButtonComponent = new ShowMoreButtonView();
     this._noMoviesComponent = new NoMoviesView();
+
+    this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
   }
 
   init(movies, comments) {
@@ -40,26 +37,22 @@ export default class MoviesBoard {
     render(this._moviesBoardContainer, this._contentComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderShowMoreButton() {
-    const moviesListContainer = this._moviesListComponent.getContainer();
-    let renderedMovieCards = CARD_COUNT_PER_STEP;
+  _handleShowMoreButtonClick() {
+    this._renderMovieCards(this._renderedCardCount, this._renderedCardCount + CARD_COUNT_PER_STEP);
+    this._renderedCardCount += CARD_COUNT_PER_STEP;
 
+    if ( this._renderedCardCount >= this._movies.length) {
+      remove(this._showMoreButtonComponent);
+    }
+  }
+
+  _renderShowMoreButton() {
+    const moviesListContainer = this._moviesListComponent;
     const showMoreButtonComponent = this._showMoreButtonComponent;
 
-    render(moviesListContainer, showMoreButtonComponent, RenderPosition.AFTEREND);
+    render(moviesListContainer, showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    showMoreButtonComponent.setClickHandler(() => {
-      this._movies
-        .slice(renderedMovieCards, renderedMovieCards + CARD_COUNT_PER_STEP)
-        .forEach((card) => this._renderMovieCard(moviesListContainer, card));
-
-      renderedMovieCards += CARD_COUNT_PER_STEP;
-
-      if ( renderedMovieCards >= this._movies.length) {
-        remove(showMoreButtonComponent);
-      }
-
-    });
+    this._showMoreButtonComponent.setClickHandler(this._handleShowMoreButtonClick);
   }
 
   _renderNoMovies() {
@@ -67,61 +60,65 @@ export default class MoviesBoard {
   }
 
   _renderMovieCard(movie) {
-    const cardComponent = new CardView(movie);
+    // const cardComponent = new CardView(movie);
 
-    const openPopup = () => {
-      const popupComponent = new MovieDetailsView(movie, getMovieComments(movie, this._comments));
+    // const openPopup = () => {
+    //   const popupComponent = new MovieDetailsView(movie, getMovieComments(movie, this._comments));
 
-      const closePopup = (cb) => {
-        popupComponent.getElement().remove();
-        document.body.removeEventListener('keydown', cb);
-        document.body.classList.remove('hide-overflow');
-      };
-      const onPopupEscKeydown = (evt) => {
-        if(isEscEvent(evt)) {
-          evt.preventDefault();
-          closePopup(onPopupEscKeydown);
-        }
-      };
-      const onPopupCloseButtonClick = () => {
-        closePopup(onPopupEscKeydown);
-      };
+    //   const closePopup = (cb) => {
+    //     popupComponent.getElement().remove();
+    //     document.body.removeEventListener('keydown', cb);
+    //     document.body.classList.remove('hide-overflow');
+    //   };
+    //   const onPopupEscKeydown = (evt) => {
+    //     if(isEscEvent(evt)) {
+    //       evt.preventDefault();
+    //       closePopup(onPopupEscKeydown);
+    //     }
+    //   };
+    //   const onPopupCloseButtonClick = () => {
+    //     closePopup(onPopupEscKeydown);
+    //   };
 
-      popupComponent.setCloseClickHandler(onPopupCloseButtonClick);
-      document.body.appendChild(popupComponent.getElement());
-      document.body.classList.add('hide-overflow');
-      document.body.addEventListener('keydown', onPopupEscKeydown);
-    };
+    //   popupComponent.setCloseClickHandler(onPopupCloseButtonClick);
+    //   document.body.appendChild(popupComponent.getElement());
+    //   document.body.classList.add('hide-overflow');
+    //   document.body.addEventListener('keydown', onPopupEscKeydown);
+    // };
 
-    cardComponent.setOpenClickHandler(openPopup);
-    render(this._moviesListComponent, cardComponent, RenderPosition.BEFOREEND);
+    // cardComponent.setOpenClickHandler(openPopup);
+    // render(this._moviesListComponent.getContainer(), cardComponent, RenderPosition.BEFOREEND);
+
+    const moviePresenter = new MoviePresenter(this._moviesListComponent.getContainer());
+
+    moviePresenter.init(movie, this._comments);
+  }
+
+  _renderMovieCards(from, to) {
+    this._movies
+      .slice(from, to)
+      .forEach((movie) => this._renderMovieCard(movie));
   }
 
   _renderMoviesList() {
-    const cardsCount = Math.min(this._movies.length, CARD_COUNT_PER_STEP);
-    const movieslistTemplate = this._moviesListComponent(CONTAINER_TITLES.all);
+    const cardsCount = Math.min(this._movies.length, this._renderedCardCount);
 
-    render(this._contentComponent, movieslistTemplate, RenderPosition.BEFOREEND);
+    render(this._contentComponent, this._moviesListComponent, RenderPosition.BEFOREEND);
 
-    for (let i = 0; i < cardsCount; i++) {
-      this._renderMovieCard(this._movies[i]);
-    }
+    this._renderMovieCards(0, cardsCount);
 
-    if (this._movies.length > CARD_COUNT_PER_STEP) {
+    if (this._movies.length > this._renderedCardCount) {
       this._renderShowMoreButton();
     }
   }
 
   _renderMoviesBoard() {
-
-    const contentContainer = this._contentTemplate;
-
     if (!this._movies.length) {
       this._renderNoMovies();
       return;
     }
 
-    this._renderMovieslist(contentContainer, this._movies);
+    this._renderMoviesList();
   }
 
 }

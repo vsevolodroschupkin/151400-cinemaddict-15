@@ -6,10 +6,12 @@ import ShowMoreButtonView from '../view/show-more-button.js';
 import NoMoviesView from '../view/no-movies.js';
 import { RenderPosition, render, remove } from '../utils/render.js';
 import { CARD_COUNT_PER_STEP, CONTAINER_TITLES } from '../const.js';
+import { updateItem } from '../utils/common.js';
 export default class MoviesBoard {
   constructor (moviesBoardContainer){
     this._moviesBoardContainer = moviesBoardContainer;
     this._renderedCardCount = CARD_COUNT_PER_STEP;
+    this._moviePresenter = new Map();
 
     this._sortingComponent = new SortingView();
     this._contentComponent = new ContentView();
@@ -18,6 +20,9 @@ export default class MoviesBoard {
     this._noMoviesComponent = new NoMoviesView();
 
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
+    this._handleCardChange = this._handleCardChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
+
   }
 
   init(movies, comments) {
@@ -27,6 +32,16 @@ export default class MoviesBoard {
     this._renderSort();
     this._renderContent();
     this._renderMoviesBoard();
+
+  }
+
+  _handleCardChange(updatedMovie) {
+    this._movies = updateItem(this._movies, updatedMovie);
+    this._moviePresenter.get(updatedMovie.id).init(updatedMovie, this._comments);
+  }
+
+  _handleModeChange() {
+    this._moviePresenter.forEach((presenter) => presenter.resetView());
   }
 
   _renderSort() {
@@ -60,38 +75,9 @@ export default class MoviesBoard {
   }
 
   _renderMovieCard(movie) {
-    // const cardComponent = new CardView(movie);
-
-    // const openPopup = () => {
-    //   const popupComponent = new MovieDetailsView(movie, getMovieComments(movie, this._comments));
-
-    //   const closePopup = (cb) => {
-    //     popupComponent.getElement().remove();
-    //     document.body.removeEventListener('keydown', cb);
-    //     document.body.classList.remove('hide-overflow');
-    //   };
-    //   const onPopupEscKeydown = (evt) => {
-    //     if(isEscEvent(evt)) {
-    //       evt.preventDefault();
-    //       closePopup(onPopupEscKeydown);
-    //     }
-    //   };
-    //   const onPopupCloseButtonClick = () => {
-    //     closePopup(onPopupEscKeydown);
-    //   };
-
-    //   popupComponent.setCloseClickHandler(onPopupCloseButtonClick);
-    //   document.body.appendChild(popupComponent.getElement());
-    //   document.body.classList.add('hide-overflow');
-    //   document.body.addEventListener('keydown', onPopupEscKeydown);
-    // };
-
-    // cardComponent.setOpenClickHandler(openPopup);
-    // render(this._moviesListComponent.getContainer(), cardComponent, RenderPosition.BEFOREEND);
-
-    const moviePresenter = new MoviePresenter(this._moviesListComponent.getContainer());
-
+    const moviePresenter = new MoviePresenter(this._moviesListComponent.getContainer(), this._handleCardChange, this._handleModeChange);
     moviePresenter.init(movie, this._comments);
+    this._moviePresenter.set(movie.id, moviePresenter);
   }
 
   _renderMovieCards(from, to) {
@@ -110,6 +96,13 @@ export default class MoviesBoard {
     if (this._movies.length > this._renderedCardCount) {
       this._renderShowMoreButton();
     }
+  }
+
+  _clearMovieList() {
+    this._moviePresenter.forEach((presenter) => presenter.destroy());
+    this.moviePresenter.clear();
+    this._renderedCardCount = CARD_COUNT_PER_STEP;
+    remove(this._showMoreButtonComponent);
   }
 
   _renderMoviesBoard() {

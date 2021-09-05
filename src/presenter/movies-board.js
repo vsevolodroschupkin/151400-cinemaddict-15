@@ -71,7 +71,7 @@ export default class MoviesBoard {
     this._currentSortType = sortType;
     this._sortMovies(sortType);
     this._clearMovieList();
-    this._sortingComponent.getElement().remove();
+    remove(this._sortingComponent);
     this._sortingComponent = new SortingView(this._currentSortType);
     this._renderSort();
     this._renderContent();

@@ -45,7 +45,8 @@ const createEmotionsTemplate = (emotions) => emotions
   .join('');
 
 const createDetailsTemplate = (movie, movieComments) => {
-  const {filmInfo, comments} = movie;
+  const {filmInfo, comments, userDetails } = movie;
+  const {watchlist, alreadyWatched, favorite} = userDetails;
 
   const {title, alternativeTitle, totalRating, runtime, genre, poster, description, director, writers, actors, release, ageRating} = filmInfo;
 
@@ -64,6 +65,10 @@ const createDetailsTemplate = (movie, movieComments) => {
 
   const commentsTemplate = createCommentsTemplate(movieComments);
   const emotionsTemplate = createEmotionsTemplate(EMOTIONS);
+
+  const addToWatchlistActiveClass = watchlist ? 'film-details__control-button--active' : '';
+  const favoriteActiveClass = favorite ? 'film-details__control-button--active' : '';
+  const alreadyWatchedActiveClass = alreadyWatched ? 'film-details__control-button--active' : '';
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -130,9 +135,9 @@ const createDetailsTemplate = (movie, movieComments) => {
         </div>
 
         <section class="film-details__controls">
-          <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-          <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-          <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watchlist ${addToWatchlistActiveClass}" id="watchlist" name="watchlist">Add to watchlist</button>
+          <button type="button" class="film-details__control-button  film-details__control-button--watched ${alreadyWatchedActiveClass}" id="watched" name="watched">Already watched</button>
+          <button type="button" class="film-details__control-button film-details__control-button--favorite ${favoriteActiveClass}" id="favorite" name="favorite">Add to favorites</button>
         </section>
       </div>
 
@@ -164,7 +169,11 @@ export default class MovieDetails extends Abstract {
     super();
     this._movie = movie;
     this._comments = comments;
+
     this._closeClickHandler = this._closeClickHandler.bind(this);
+    this._addToWatchlistHandler = this._addToWatchlistHandler.bind(this);
+    this._addToFavoritesHandler = this._addToFavoritesHandler.bind(this);
+    this._markAsWatchedHandler = this._markAsWatchedHandler.bind(this);
   }
 
   getTemplate() {
@@ -176,9 +185,39 @@ export default class MovieDetails extends Abstract {
     this._callback.closeClick();
   }
 
+  _addToWatchlistHandler (evt) {
+    evt.preventDefault();
+    this._callback.addToWatchlist();
+  }
+
+  _addToFavoritesHandler (evt) {
+    evt.preventDefault();
+    this._callback.addToFavorites();
+  }
+
+  _markAsWatchedHandler (evt) {
+    evt.preventDefault();
+    this._callback.markAsWatched();
+  }
+
   setCloseClickHandler(callback) {
     this._callback.closeClick = callback;
     this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._closeClickHandler);
+  }
+
+  setAddToWatchlistHandler (callback) {
+    this._callback.addToWatchlist = callback;
+    this.getElement().querySelector('.film-details__control-button--watchlist').addEventListener('click', this._addToWatchlistHandler);
+  }
+
+  setAddToFavoritesHandler (callback) {
+    this._callback.addToFavorites = callback;
+    this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._addToFavoritesHandler);
+  }
+
+  setMarkAsWatchedHandler (callback) {
+    this._callback.markAsWatched = callback;
+    this.getElement().querySelector('.film-details__control-button--watched').addEventListener('click', this._markAsWatchedHandler);
   }
 
 }

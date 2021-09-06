@@ -9,4 +9,4 @@ export const getFormattedReleaseDate = (date) => dayjs(date).format('DD MMMM YYY
 
 export const getFormattedCommentDate = (date) => dayjs(date).format('YYYY/MM/DD hh:mm');
 
-
+export const sortMoviesByDateDesc = (movieA, movieB) => dayjs(movieB.filmInfo.release.date).diff(dayjs(movieA.filmInfo.release.date));

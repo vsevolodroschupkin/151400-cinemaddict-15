@@ -5,15 +5,18 @@ import MovieslistView from '../view/movies-list.js';
 import ShowMoreButtonView from '../view/show-more-button.js';
 import NoMoviesView from '../view/no-movies.js';
 import { RenderPosition, render, remove } from '../utils/render.js';
-import { CARD_COUNT_PER_STEP, CONTAINER_TITLES } from '../const.js';
+import { CARD_COUNT_PER_STEP, CONTAINER_TITLES, SORT_TYPE } from '../const.js';
 import { updateItem } from '../utils/common.js';
+import { sortMoviesByDateDesc} from '../utils/dates.js';
+import { sortMoviesByRatingDesc } from '../utils/movies.js';
 export default class MoviesBoard {
   constructor (moviesBoardContainer){
     this._moviesBoardContainer = moviesBoardContainer;
     this._renderedCardCount = CARD_COUNT_PER_STEP;
     this._moviePresenter = new Map();
+    this._currentSortType = SORT_TYPE.DEFAULT;
 
-    this._sortingComponent = new SortingView();
+    this._sortingComponent = new SortingView(this._currentSortType);
     this._contentComponent = new ContentView();
     this._moviesListComponent = new MovieslistView(CONTAINER_TITLES.all);
     this._showMoreButtonComponent = new ShowMoreButtonView();
@@ -23,11 +26,14 @@ export default class MoviesBoard {
     this._handleCardChange = this._handleCardChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+
   }
 
   init(movies, comments) {
     this._movies = movies.slice();
     this._comments = comments.slice();
+    this._sourcedMovies = movies.slice();
 
     this._renderSort();
     this._renderContent();
@@ -37,15 +43,45 @@ export default class MoviesBoard {
 
   _handleCardChange(updatedMovie) {
     this._movies = updateItem(this._movies, updatedMovie);
+    this._sourcedMovies = updateItem(this._sourcedMovies, updatedMovie);
     this._moviePresenter.get(updatedMovie.id).init(updatedMovie, this._comments);
+  }
+
+  _sortMovies(sortType){
+    switch(sortType) {
+      case SORT_TYPE.DATE_DESC :
+        this._movies.sort(sortMoviesByDateDesc);
+        break;
+      case SORT_TYPE.RATING_DESC :
+        this._movies.sort(sortMoviesByRatingDesc);
+        break;
+      default:
+        this._movies = this._sourcedMovies.slice();
+    }
   }
 
   _handleModeChange() {
     this._moviePresenter.forEach((presenter) => presenter.resetView());
   }
 
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+    this._currentSortType = sortType;
+    this._sortMovies(sortType);
+    this._clearMovieList();
+    remove(this._sortingComponent);
+    this._sortingComponent = new SortingView(this._currentSortType);
+    this._renderSort();
+    this._renderContent();
+    this._renderMoviesBoard();
+
+  }
+
   _renderSort() {
     render(this._moviesBoardContainer, this._sortingComponent, RenderPosition.BEFOREEND);
+    this._sortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderContent() {
@@ -100,7 +136,7 @@ export default class MoviesBoard {
 
   _clearMovieList() {
     this._moviePresenter.forEach((presenter) => presenter.destroy());
-    this.moviePresenter.clear();
+    this._moviePresenter.clear();
     this._renderedCardCount = CARD_COUNT_PER_STEP;
     remove(this._showMoreButtonComponent);
   }

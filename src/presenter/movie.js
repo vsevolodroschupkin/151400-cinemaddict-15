@@ -89,11 +89,11 @@ export default class Movie {
     this._movieDetailsComponent.getElement().remove();
     document.body.removeEventListener('keydown', this._escKeyDownHandler);
     document.body.classList.remove('hide-overflow');
+    this._mode = Mode.DEFAULT;
   }
 
   _handleDetailsCloseButtonClick() {
     this._closeDetails();
-    this._mode = Mode.DEFAULT;
   }
 
   _handleOpenDetails() {

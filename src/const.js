@@ -26,3 +26,9 @@ export const MOVIE_COUNT = 20;
 export const CONTAINER_TITLES = {
   all: 'All movies. Upcoming',
 };
+
+export const SORT_TYPE = {
+  DEFAULT: 'default',
+  DATE_DESC: 'date-desc',
+  RATING_DESC: 'rating-desc',
+};

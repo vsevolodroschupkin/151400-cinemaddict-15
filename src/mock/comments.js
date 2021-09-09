@@ -2,7 +2,7 @@ import { addDaysToDate } from '../utils/dates.js';
 import { getRandomInteger, getRandomArrayElement } from '../utils/random.js';
 
 const COMMENT_MIN_COUNT = 0;
-const COMMENT_MAX_COUNT = 5;
+const COMMENT_MAX_COUNT = 1;
 const COMMENTS = [
   'a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
   'what a fantastic movie',

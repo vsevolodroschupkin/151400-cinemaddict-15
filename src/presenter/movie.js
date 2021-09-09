@@ -81,6 +81,7 @@ export default class Movie {
   _escKeyDownHandler(evt) {
     if(isEscEvent(evt)) {
       evt.preventDefault();
+      this._movieDetailsComponent.reset(this._movie);
       this._closeDetails();
     }
   }

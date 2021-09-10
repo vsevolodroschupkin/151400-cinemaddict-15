@@ -1,7 +1,7 @@
 import { EMOTIONS } from '../const.js';
 import { getFormattedCommentDate, getFormattedReleaseDate } from '../utils/dates.js';
 import { getFormattedDescription, getFormattedDuration } from '../utils/movies.js';
-import Abstract from './abstract.js';
+import SmartView from './smart.js';
 
 const createCommentItemTemplate = (comment) => {
   const {emotion, comment: text, author, date} = comment;
@@ -22,9 +22,8 @@ const createCommentItemTemplate = (comment) => {
   </li>`;
 };
 
-const createCommentsTemplate = (comments) => {
-
-  if(comments.length === 0){
+const createCommentsTemplate = (comments, isComments) => {
+  if(!isComments){
     return '';
   }
 
@@ -44,26 +43,25 @@ const createEmotionsTemplate = (emotions) => emotions
     </label>`)
   .join('');
 
-const createDetailsTemplate = (movie, movieComments) => {
-  const {filmInfo, comments, userDetails } = movie;
+const createDetailsTemplate = (data, movieComments) => {
+  const {filmInfo, comments, userDetails, isSingleGenre, isComments, emoji } = data;
   const {watchlist, alreadyWatched, favorite} = userDetails;
-
   const {title, alternativeTitle, totalRating, runtime, genre, poster, description, director, writers, actors, release, ageRating} = filmInfo;
 
   const duration = getFormattedDuration(runtime);
   const url = poster;
   const formattedDescription = getFormattedDescription(description);
-  const commentsQuantity = comments ? comments.length : '0';
+  const commentsQuantity = isComments ? comments.length : '0';
   const movieWriters = writers.join(', ');
   const movieActors = actors.join(', ');
 
   const releaseDate = getFormattedReleaseDate(release.date);
   const releaseCountry = release.releaseCountry;
-  const genresTerm = genre.length === 1 ? 'Genre' : 'Genres';
+  const genresTerm = isSingleGenre ? 'Genre' : 'Genres';
 
   const genresTemplate = genre.map((element) => `<span class="film-details__genre">${element}</span>`).join(' ');
 
-  const commentsTemplate = createCommentsTemplate(movieComments);
+  const commentsTemplate = createCommentsTemplate(movieComments, isComments);
   const emotionsTemplate = createEmotionsTemplate(EMOTIONS);
 
   const addToWatchlistActiveClass = watchlist ? 'film-details__control-button--active' : '';
@@ -148,7 +146,7 @@ const createDetailsTemplate = (movie, movieComments) => {
           ${commentsTemplate}
 
           <div class="film-details__new-comment">
-            <div class="film-details__add-emoji-label"></div>
+            <div class="film-details__add-emoji-label">${!emoji ? '' : `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">`}</div>
 
             <label class="film-details__comment-label">
               <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -164,20 +162,24 @@ const createDetailsTemplate = (movie, movieComments) => {
   </section>`;
 };
 
-export default class MovieDetails extends Abstract {
+export default class MovieDetails extends SmartView {
   constructor(movie, comments) {
     super();
-    this._movie = movie;
+    this._data = MovieDetails.parseMovieToData(movie);
     this._comments = comments;
 
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._addToWatchlistHandler = this._addToWatchlistHandler.bind(this);
     this._addToFavoritesHandler = this._addToFavoritesHandler.bind(this);
     this._markAsWatchedHandler = this._markAsWatchedHandler.bind(this);
+    this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
+    this._commentInputHandler = this._commentInputHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   getTemplate() {
-    return createDetailsTemplate(this._movie, this._comments);
+    return createDetailsTemplate(this._data, this._comments);
   }
 
   _closeClickHandler(evt) {
@@ -200,6 +202,25 @@ export default class MovieDetails extends Abstract {
     this._callback.markAsWatched();
   }
 
+  _emojiChangeHandler (evt) {
+    evt.preventDefault();
+    this.updateData(
+      {
+        emoji: evt.target.value,
+      },
+    );
+  }
+
+  _commentInputHandler (evt) {
+    evt.preventDefault();
+    this.updateData(
+      {
+        comment: evt.target.value,
+      },
+      true,
+    );
+  }
+
   setCloseClickHandler(callback) {
     this._callback.closeClick = callback;
     this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._closeClickHandler);
@@ -220,5 +241,53 @@ export default class MovieDetails extends Abstract {
     this.getElement().querySelector('.film-details__control-button--watched').addEventListener('click', this._markAsWatchedHandler);
   }
 
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector('.film-details__emoji-list')
+      .querySelectorAll('.film-details__emoji-item')
+      .forEach((it) => it.addEventListener('change', this._emojiChangeHandler));
+
+    this.getElement()
+      .querySelector('.film-details__comment-input')
+      .addEventListener('input', this._commentInputHandler);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setCloseClickHandler(this._callback.closeClick);
+    this.setAddToWatchlistHandler(this._callback.addToWatchlist);
+    this.setMarkAsWatchedHandler(this._callback.markAsWatched);
+    this.setAddToFavoritesHandler(this._callback.addToFavorites);
+  }
+
+  reset(movie) {
+    this.updateData(
+      MovieDetails.parseMovieToData(movie),
+    );
+  }
+
+  static parseMovieToData(movie) {
+    return Object.assign(
+      {},
+      movie,
+      {
+        isSingleGenre: movie.filmInfo.genre.length === 1,
+        isComments: movie.comments.length !== 0,
+        comment: '',
+        emoji: null,
+      },
+    );
+  }
+
+  static parseDataToMovie(data) {
+    data = Object.assign({}, data);
+
+    delete data.isMultipleGenre;
+    delete data.isComments;
+    delete data.comment;
+    delete data.emoji;
+
+    return data;
+  }
 }
 

@@ -1,20 +1,24 @@
 import Abstract from './abstract.js';
 
-const createMainNavItem = (filter) => {
-  const {name, count, title } = filter;
+const createMainNavItem = (filter, currentFilterType) => {
+  const {type, count, title } = filter;
 
-  const itemCount = name === 'all' ? '' : ` <span class="main-navigation__item-count">${count}</span>`;
+  const itemCount = type === 'all' ? '' : ` <span class="main-navigation__item-count">${count}</span>`;
+
+  const itemActiveClass = type === currentFilterType ? 'main-navigation__item--active' : '';
 
   return `<a
-    href="#${name}"
-    class="main-navigation__item main-navigation__item">${title}${itemCount}
+    href="#${type}"
+    class="main-navigation__item ${itemActiveClass}"
+    data-filter-type="${type}"
+    >${title}${itemCount}
     </a>`;
 };
 
-const createMainNavTemplate = (filters) => {
+const createMainNavTemplate = (filters, currentFilterType) => {
 
   const navigationItemsTemplate = filters
-    .map((filter) => createMainNavItem(filter))
+    .map((filter) => createMainNavItem(filter, currentFilterType))
     .join('');
 
   return `<nav class="main-navigation">
@@ -26,13 +30,30 @@ const createMainNavTemplate = (filters) => {
 };
 
 export default class MainNav extends Abstract {
-  constructor(filters) {
+  constructor(filters, currentFilterType) {
     super();
     this._filters = filters;
+    this._currentFilterType = currentFilterType;
+    this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return createMainNavTemplate(this._filters);
+    return createMainNavTemplate(this._filters, this._currentFilterType);
+  }
+
+  _filterTypeChangeHandler(evt) {
+    if (evt.target.tagName !== 'A') {
+      return;
+    }
+
+    evt.preventDefault();
+    this._callback.filterTypeChange(evt.target.dataset.filterType);
+  }
+
+  setFilterTypeChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+
+    this.getElement().addEventListener('click', this._filterTypeChangeHandler);
   }
 
 }

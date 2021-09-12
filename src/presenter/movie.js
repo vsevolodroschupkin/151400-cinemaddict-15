@@ -3,6 +3,8 @@ import CardView from '../view/card.js';
 import MovieDetailsView from '../view/movie-details.js';
 import { getMovieComments } from '../utils/movies.js';
 import { isEscEvent } from '../utils/common.js';
+import { USER_ACTION, UPDATE_TYPE } from '../const.js';
+
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -10,10 +12,11 @@ const Mode = {
 };
 
 export default class Movie {
-  constructor(movieListContainer, changeData, changeMode) {
+  constructor(movieListContainer, changeData, changeMode, movieDetailsState) {
     this._movieListContainer = movieListContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._movieDetailsState = movieDetailsState;
 
     this._cardComponent = null;
     this._movieDetailsComponent = null;
@@ -25,6 +28,7 @@ export default class Movie {
     this._handleMarkAsWatchedClick = this._handleMarkAsWatchedClick.bind(this);
     this._handleDetailsCloseButtonClick = this._handleDetailsCloseButtonClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
   init(movie, comments) {
@@ -43,11 +47,11 @@ export default class Movie {
 
     this._movieDetailsComponent = new MovieDetailsView(this._movie, this._comments);
 
-
     this._movieDetailsComponent.setCloseClickHandler(this._handleDetailsCloseButtonClick);
     this._movieDetailsComponent.setAddToFavoritesHandler(this._handleFavoriteClick);
     this._movieDetailsComponent.setMarkAsWatchedHandler(this._handleMarkAsWatchedClick);
     this._movieDetailsComponent.setAddToWatchlistHandler(this._handleAdToWatchlistClick);
+    this._movieDetailsComponent.setCommentDeleteClickHandler(this._handleDeleteClick);
 
 
     if (prevCardComponent === null) {
@@ -81,7 +85,6 @@ export default class Movie {
   _escKeyDownHandler(evt) {
     if(isEscEvent(evt)) {
       evt.preventDefault();
-      this._movieDetailsComponent.reset(this._movie);
       this._closeDetails();
     }
   }
@@ -90,6 +93,7 @@ export default class Movie {
     this._movieDetailsComponent.getElement().remove();
     document.body.removeEventListener('keydown', this._escKeyDownHandler);
     document.body.classList.remove('hide-overflow');
+    this._movieDetailsComponent.reset(this._movie);
     this._mode = Mode.DEFAULT;
   }
 
@@ -97,11 +101,15 @@ export default class Movie {
     this._closeDetails();
   }
 
-  _handleOpenDetails() {
-    this._changeMode();
+  _renderMovieDetails() {
     document.body.appendChild(this._movieDetailsComponent.getElement());
     document.body.classList.add('hide-overflow');
     document.body.addEventListener('keydown', this._escKeyDownHandler);
+  }
+
+  _handleOpenDetails () {
+    this._changeMode();
+    this._renderMovieDetails();
     this._mode = Mode.DETAILS;
   }
 
@@ -125,7 +133,10 @@ export default class Movie {
       },
     );
 
-    this._changeData(updatedMovie);
+    this._changeData(
+      USER_ACTION.UPDATE_MOVIE,
+      UPDATE_TYPE.MINOR,
+      updatedMovie);
   }
 
   _handleFavoriteClick() {
@@ -148,7 +159,10 @@ export default class Movie {
       },
     );
 
-    this._changeData(updatedMovie);
+    this._changeData(
+      USER_ACTION.UPDATE_MOVIE,
+      UPDATE_TYPE.MINOR,
+      updatedMovie);
   }
 
   _handleMarkAsWatchedClick() {
@@ -171,6 +185,20 @@ export default class Movie {
       },
     );
 
-    this._changeData(updatedMovie);
+    this._changeData(
+      USER_ACTION.UPDATE_MOVIE,
+      UPDATE_TYPE.MINOR,
+      updatedMovie);
   }
+
+  _handleDeleteClick(movie) {
+    this._changeData(
+      USER_ACTION.DELETE_COMMENT,
+      UPDATE_TYPE.PATCH,
+      movie,
+    );
+  }
+
+  //TODO Добавить метод для обработки отправки коммента + функцию замены коммента на нормальный модул
+  //_handleCommentSubmit(update)
 }

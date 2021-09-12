@@ -174,6 +174,7 @@ export default class MovieDetails extends SmartView {
     this._markAsWatchedHandler = this._markAsWatchedHandler.bind(this);
     this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
     this._commentInputHandler = this._commentInputHandler.bind(this);
+    this._commentDeleteClickHandler = this._commentDeleteClickHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -221,6 +222,11 @@ export default class MovieDetails extends SmartView {
     );
   }
 
+  _commentDeleteClickHandler (evt) {
+    evt.preventDefault();
+    this._callback.deleteComment(MovieDetails.parseDataToMovie(this._data));
+  }
+
   setCloseClickHandler(callback) {
     this._callback.closeClick = callback;
     this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._closeClickHandler);
@@ -241,6 +247,11 @@ export default class MovieDetails extends SmartView {
     this.getElement().querySelector('.film-details__control-button--watched').addEventListener('click', this._markAsWatchedHandler);
   }
 
+  setCommentDeleteClickHandler (callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelectorAll('.film-details__comment-delete').forEach((it) => it.addEventListener('click', this._commentDeleteClickHandler));
+  }
+
   _setInnerHandlers() {
     this.getElement()
       .querySelector('.film-details__emoji-list')
@@ -258,6 +269,7 @@ export default class MovieDetails extends SmartView {
     this.setAddToWatchlistHandler(this._callback.addToWatchlist);
     this.setMarkAsWatchedHandler(this._callback.markAsWatched);
     this.setAddToFavoritesHandler(this._callback.addToFavorites);
+    this.setCommentDeleteClickHandler(this._callback.deleteComment);
   }
 
   reset(movie) {

@@ -32,3 +32,22 @@ export const SORT_TYPE = {
   DATE_DESC: 'date-desc',
   RATING_DESC: 'rating-desc',
 };
+
+export const USER_ACTION = {
+  UPDATE_MOVIE: 'UPDATE_MOVIE',
+  ADD_COMMENT: 'ADD_COMMENT',
+  DELETE_COMMENT: 'DELETE_COMMENT',
+};
+
+export const UPDATE_TYPE = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export const FILTER_TYPE = {
+  ALL_MOVIES: 'all',
+  WATCHLIST: 'watchlist',
+  HISTORY: 'history',
+  FAVORITES: 'favorites',
+};

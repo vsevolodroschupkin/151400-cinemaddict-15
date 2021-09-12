@@ -87,13 +87,14 @@ export default class Movie {
       evt.preventDefault();
       this._closeDetails();
     }
+
   }
 
   _closeDetails() {
+    this._movieDetailsComponent.reset(this._movie);
     this._movieDetailsComponent.getElement().remove();
     document.body.removeEventListener('keydown', this._escKeyDownHandler);
     document.body.classList.remove('hide-overflow');
-    this._movieDetailsComponent.reset(this._movie);
     this._mode = Mode.DEFAULT;
   }
 
@@ -199,6 +200,4 @@ export default class Movie {
     );
   }
 
-  //TODO Добавить метод для обработки отправки коммента + функцию замены коммента на нормальный модул
-  //_handleCommentSubmit(update)
 }

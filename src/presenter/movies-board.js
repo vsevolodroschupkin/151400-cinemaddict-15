@@ -55,10 +55,6 @@ export default class MoviesBoard {
     this._renderBoard();
   }
 
-  _handleCardChange(updatedMovie) {
-    this._moviePresenter.get(updatedMovie.id).init(updatedMovie, this._commentsModel.getComments());
-  }
-
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case USER_ACTION.UPDATE_MOVIE:
@@ -84,7 +80,7 @@ export default class MoviesBoard {
         break;
       case UPDATE_TYPE.MAJOR:
         this._clearBoard({resetRenderedMovieCount: true, resetSortType: true});
-        this._renderBoard;
+        this._renderBoard();
         break;
     }
   }

@@ -11,12 +11,15 @@ const Mode = {
   DETAILS: 'DETAILS',
 };
 
+const START_SCROLL_POSITION = 0;
+
 export default class Movie {
-  constructor(movieListContainer, changeData, changeMode, movieDetailsState) {
+  constructor(movieListContainer, changeData, changeMode, setOpenedMovie, setPopupScrollPosition) {
     this._movieListContainer = movieListContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
-    this._movieDetailsState = movieDetailsState;
+    this._setOpenedMovie = setOpenedMovie;
+    this._setPopupScrollPosition = setPopupScrollPosition;
 
     this._cardComponent = null;
     this._movieDetailsComponent = null;
@@ -68,7 +71,11 @@ export default class Movie {
 
     remove(prevCardComponent);
     remove(prevMovieDetailsComponent);
+  }
 
+  restoreOpenedPopup(scrollTop = START_SCROLL_POSITION) {
+    this._handleOpenDetails();
+    this._movieDetailsComponent.setScrollTop(scrollTop);
   }
 
   resetView() {
@@ -78,8 +85,15 @@ export default class Movie {
   }
 
   destroy() {
+    if (this._mode === Mode.DETAILS) {
+      this._setPopupScrollPosition(this._movieDetailsComponent.getScrollTop());
+    }
     remove(this._cardComponent);
     remove(this._movieDetailsComponent);
+  }
+
+  openDetails() {
+    this._handleOpenDetails();
   }
 
   _escKeyDownHandler(evt) {
@@ -96,6 +110,8 @@ export default class Movie {
     document.body.removeEventListener('keydown', this._escKeyDownHandler);
     document.body.classList.remove('hide-overflow');
     this._mode = Mode.DEFAULT;
+    this._setOpenedMovie(null);
+    this._setPopupScrollPosition(START_SCROLL_POSITION);
   }
 
   _handleDetailsCloseButtonClick() {
@@ -112,6 +128,8 @@ export default class Movie {
     this._changeMode();
     this._renderMovieDetails();
     this._mode = Mode.DETAILS;
+    this._setOpenedMovie(this._movie);
+    this._setPopupScrollPosition(START_SCROLL_POSITION);
   }
 
   _handleAdToWatchlistClick() {

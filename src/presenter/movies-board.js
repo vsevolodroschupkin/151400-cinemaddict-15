@@ -19,6 +19,8 @@ export default class MoviesBoard {
     this._moviePresenter = new Map();
     this._currentSortType = SORT_TYPE.DEFAULT;
     this._filterType = FILTER_TYPE.ALL_MOVIES;
+    this._openedMovie = null;
+    this._popupScrollPosition = 0;
 
     this._sortingComponent = null;
     this._showMoreButtonComponent = null;
@@ -26,6 +28,8 @@ export default class MoviesBoard {
     this._moviesListComponent = new MovieslistView(CONTAINER_TITLES.all);
     this._noMoviesComponent = null;
 
+    this._setPopupScrollPosition = this._setPopupScrollPosition.bind(this);
+    this._setOpenedMovie = this._setOpenedMovie.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -146,10 +150,23 @@ export default class MoviesBoard {
   }
 
   _renderMovieCard(movie) {
-    const moviePresenter = new MoviePresenter(this._moviesListComponent.getContainer(), this._handleViewAction, this._handleModeChange);
+    const moviePresenter = new MoviePresenter(this._moviesListComponent.getContainer(), this._handleViewAction, this._handleModeChange, this._setOpenedMovie, this._setPopupScrollPosition);
     moviePresenter.init(movie, this._commentsModel.getComments());
 
+    const isPopupOpen = this._openedMovie && this._openedMovie.id === movie.id;
+    if(isPopupOpen) {
+      moviePresenter.restoreOpenedPopup(this._popupScrollPosition);
+    }
+
     this._moviePresenter.set(movie.id, moviePresenter);
+  }
+
+  _setOpenedMovie(movie) {
+    this._openedMovie = movie;
+  }
+
+  _setPopupScrollPosition(scrollPosition) {
+    this._popupScrollPosition = scrollPosition;
   }
 
   _renderMovieCards(movies) {

@@ -183,6 +183,24 @@ export default class MovieDetails extends SmartView {
     return createDetailsTemplate(this._data, this._comments);
   }
 
+  setScrollTop(scrollTop){
+    this.getElement().scrollTop = scrollTop;
+  }
+
+  getScrollPosition(){
+    return this.getElement().scrollTop;
+  }
+
+  updateElement() {
+    this._scrollTop = this.getElement().scrollTop;
+    super.updateElement();
+    this._restoreScrollTop();
+  }
+
+  _restoreScrollTop(){
+    this.getElement().scrollTop = this._scrollTop;
+  }
+
   _closeClickHandler(evt) {
     evt.preventDefault();
     this._callback.closeClick();

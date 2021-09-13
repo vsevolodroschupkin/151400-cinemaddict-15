@@ -1,3 +1,5 @@
+// TODO: Именование перечислений
+
 export const EMOTIONS = [
   'smile',
   'sleeping',

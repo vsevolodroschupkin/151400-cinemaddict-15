@@ -34,6 +34,11 @@ export default class MoviesBoard {
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+
+    this._openedMovie = null;
+    this._popupScrollPosition = 0;
+    this._setOpenedMovie = this._setOpenedMovie.bind(this);
+    this._setPopupScrollPosition = this._setPopupScrollPosition.bind(this);
   }
 
   _getMovies() {
@@ -146,10 +151,24 @@ export default class MoviesBoard {
   }
 
   _renderMovieCard(movie) {
-    const moviePresenter = new MoviePresenter(this._moviesListComponent.getContainer(), this._handleViewAction, this._handleModeChange);
+
+    const moviePresenter = new MoviePresenter(this._moviesListComponent.getContainer(), this._handleViewAction, this._handleModeChange, this._setOpenedMovie, this._setPopupScrollPosition);
     moviePresenter.init(movie, this._commentsModel.getComments());
 
+    const isPopupOpen = this._openedMovie && this._openedMovie.id === movie.id;
+    if (isPopupOpen) {
+      moviePresenter.restoreOpenedPopup(this._popupScrollPosition);
+    }
+
     this._moviePresenter.set(movie.id, moviePresenter);
+  }
+
+  _setOpenedMovie(movie){
+    this._openedMovie = movie;
+  }
+
+  _setPopupScrollPosition(scrollPosition){
+    this._popupScrollPosition = scrollPosition;
   }
 
   _renderMovieCards(movies) {

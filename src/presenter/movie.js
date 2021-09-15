@@ -210,11 +210,15 @@ export default class Movie {
       updatedMovie);
   }
 
-  _handleDeleteClick(movie) {
+  _handleDeleteClick(id) {
+    const data = {
+      commentId: Number(id),
+      movie: this._movie,
+    };
     this._changeData(
       USER_ACTION.DELETE_COMMENT,
-      UPDATE_TYPE.PATCH,
-      movie,
+      UPDATE_TYPE.MINOR,
+      data,
     );
   }
 

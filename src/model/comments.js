@@ -14,22 +14,6 @@ export default class Comments extends AbstactObserver {
     return this._comments;
   }
 
-  updateComment(updateType, update) {
-    const index = this._movies.findIndex((movie) => movie.id === update.id);
-
-    if (index === -1) {
-      throw new Error('Can\'t update unexisting movie');
-    }
-
-    this._movies = [
-      ...this._movies.slice(0, index),
-      update,
-      ...this._movies.slice(index + 1),
-    ];
-
-    this._notify(updateType, update);
-  }
-
   addComment(updateType, update) {
     this._comments = [
       update,
@@ -40,7 +24,9 @@ export default class Comments extends AbstactObserver {
   }
 
   deleteComment(updateType, update) {
-    const index = this._comments.findIndex((comment) => comment.id === update.id);
+    const index = this._comments.findIndex((comment) => comment.id === update.commentId);
+
+    console.log(index);
 
     if(index === -1) {
       throw new Error('Can\'t delete unexisting comment');
@@ -51,7 +37,8 @@ export default class Comments extends AbstactObserver {
       ...this._comments.slice(index + 1),
     ];
 
-    this._notify(updateType);
+
+    // this._notify(updateType, update);
   }
 
 }

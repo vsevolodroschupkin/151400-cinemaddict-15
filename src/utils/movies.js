@@ -10,8 +10,9 @@ export const getFormattedDuration = (duration) => {
 };
 
 export const getMovieComments = (movie, comments) => {
-  const commentIds = movie.comments;
-  return comments.filter((item) => commentIds.includes(item.id));
+  if (comments) {const commentIds = movie.comments;
+    return comments.filter((item) => commentIds.includes(item.id));
+  }
 };
 
 export const sortMoviesByRatingDesc = (movieA, movieB) => movieB.filmInfo.totalRating - movieA.filmInfo.totalRating;

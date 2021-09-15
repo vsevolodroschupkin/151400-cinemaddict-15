@@ -1,5 +1,4 @@
 import AbstactObserver from '../utils/abstract-observer.js';
-
 export default class Movies extends AbstactObserver {
   constructor() {
     super();
@@ -28,6 +27,19 @@ export default class Movies extends AbstactObserver {
     ];
 
     this._notify(updateType, update);
+  }
+
+  deleteComment(updateType, update) {
+
+    const movie = {...update.movie};
+    const updatedMovie = {
+      ...movie,
+      comments: movie.comments.filter((id) => id !== update.commentId),
+    };
+    console.log('из модели:', movie.comments);
+
+
+    this._notify(updateType, updatedMovie);
   }
 
 }

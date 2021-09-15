@@ -38,6 +38,7 @@ export default class MoviesBoard {
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+    this._commentsModel.addObserver(this._handleModelEvent);
   }
 
   _getMovies() {
@@ -68,6 +69,7 @@ export default class MoviesBoard {
         this._commentsModel.addComment(updateType, update);
         break;
       case USER_ACTION.DELETE_COMMENT:
+        this._moviesModel.deleteComment(updateType, update);
         this._commentsModel.deleteComment(updateType, update);
         break;
     }

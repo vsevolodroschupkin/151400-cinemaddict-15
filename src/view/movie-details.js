@@ -4,10 +4,10 @@ import { getFormattedDescription, getFormattedDuration } from '../utils/movies.j
 import SmartView from './smart.js';
 
 const createCommentItemTemplate = (comment) => {
-  const {emotion, comment: text, author, date} = comment;
+  const {emotion, comment: text, author, date, id} = comment;
   const formattedDate = getFormattedCommentDate(date);
 
-  return `<li class="film-details__comment">
+  return `<li class="film-details__comment" data-comment-id=${id}>
     <span class="film-details__comment-emoji">
       <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-smile">
     </span>
@@ -27,9 +27,8 @@ const createCommentsTemplate = (comments, isComments) => {
     return '';
   }
 
-  const template = comments
-    .map((comment) => createCommentItemTemplate(comment))
-    .join('');
+  const template = comments ?
+    comments.map((comment) => createCommentItemTemplate(comment)).join('') : '';
 
   return `<ul class="film-details__comments-list">
     ${template}
@@ -242,7 +241,8 @@ export default class MovieDetails extends SmartView {
 
   _commentDeleteClickHandler (evt) {
     evt.preventDefault();
-    this._callback.deleteComment(MovieDetails.parseDataToMovie(this._data));
+    const commentItem = evt.target.closest('[data-comment-id]');
+    this._callback.deleteClick(commentItem.dataset.commentId);
   }
 
   setCloseClickHandler(callback) {

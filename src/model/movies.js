@@ -25,19 +25,18 @@ export default class Movies extends AbstactObserver {
       update,
       ...this._movies.slice(index + 1),
     ];
-
+    console.log('фильм обновился', update);
     this._notify(updateType, update);
   }
 
-  deleteComment(updateType, update) {
-
-    const movie = {...update.movie};
+  deleteComment(updateType, {commentId, movie}) {
+    console.log('movie before comment delete', movie);
     const updatedMovie = {
       ...movie,
-      comments: movie.comments.filter((id) => id !== update.commentId),
+      comments: movie.comments.filter((id) => id !== commentId),
     };
-    console.log('из модели:', movie.comments);
-
+    console.log('комменты обновленного фильма из модели:', updatedMovie.comments);
+    this.updateMovie(updateType, updatedMovie);
 
     this._notify(updateType, updatedMovie);
   }

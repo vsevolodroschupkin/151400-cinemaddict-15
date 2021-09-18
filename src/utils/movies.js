@@ -1,3 +1,4 @@
+import he from 'he';
 const MAX_DESCRIPTION_LENGTH = 140;
 
 export const getFormattedDescription = (description) => description.length <= MAX_DESCRIPTION_LENGTH ? description : `${description.slice(0, MAX_DESCRIPTION_LENGTH - 1)  }...`;
@@ -16,3 +17,5 @@ export const getMovieComments = (movie, comments) => {
 };
 
 export const sortMoviesByRatingDesc = (movieA, movieB) => movieB.filmInfo.totalRating - movieA.filmInfo.totalRating;
+
+export const getFormattedComment = (comment) => he.encode(comment);

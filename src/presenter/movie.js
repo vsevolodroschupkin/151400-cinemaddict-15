@@ -34,7 +34,6 @@ export default class Movie {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._handleSubmitForm = this._handleSubmitForm.bind(this);
-    // this._keyDownHandler = this._keyDownHandler.bind(this);
   }
 
   init(movie, comments) {
@@ -238,7 +237,7 @@ export default class Movie {
       },
     );
 
-    if (isCrtlEnterEvent) {
+    if (isCrtlEnterEvent(evt)) {
       if (!data.text || data.emoji === 'null') {
         return;
       }

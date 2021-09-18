@@ -1,8 +1,7 @@
 import { EMOTIONS } from '../const.js';
 import { getFormattedCommentDate, getFormattedReleaseDate } from '../utils/dates.js';
-import { getFormattedDescription, getFormattedDuration } from '../utils/movies.js';
+import { getFormattedDescription, getFormattedDuration, getFormattedComment } from '../utils/movies.js';
 import SmartView from './smart.js';
-import he from 'he';
 
 const createCommentItemTemplate = (comment) => {
   const {emotion, comment: text, author, date, id} = comment;
@@ -67,6 +66,7 @@ const createDetailsTemplate = (data, movieComments) => {
   const addToWatchlistActiveClass = watchlist ? 'film-details__control-button--active' : '';
   const favoriteActiveClass = favorite ? 'film-details__control-button--active' : '';
   const alreadyWatchedActiveClass = alreadyWatched ? 'film-details__control-button--active' : '';
+  const formattedCommentText = getFormattedComment(comment);
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -149,7 +149,7 @@ const createDetailsTemplate = (data, movieComments) => {
             <div class="film-details__add-emoji-label" data-emoji-value="${emoji}">${!emoji ? '' : `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">`}</div>
 
             <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(comment || '')}</textarea>
+              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${formattedCommentText}</textarea>
             </label>
 
             <div class="film-details__emoji-list">

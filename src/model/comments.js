@@ -1,3 +1,4 @@
+import { generateComment } from '../mock/comments.js';
 import AbstactObserver from '../utils/abstract-observer.js';
 
 export default class Comments extends AbstactObserver {
@@ -15,18 +16,19 @@ export default class Comments extends AbstactObserver {
   }
 
   addComment(updateType, update) {
+
     this._comments = [
-      update,
+      update.comment,
       ...this._comments,
     ];
 
+    console.log(this._comments);
     this._notify(updateType, update);
   }
 
   deleteComment(updateType, update) {
     const index = this._comments.findIndex((comment) => comment.id === update.commentId);
 
-    console.log('id comment', update.commentId);
     if(index === -1) {
       throw new Error('Can\'t delete unexisting comment');
     }

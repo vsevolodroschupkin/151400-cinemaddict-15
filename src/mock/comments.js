@@ -22,11 +22,11 @@ export const EMOTIONS = [
 
 const DAYS_GAP = 7;
 
-const generateCommentDate = () => addDaysToDate(new Date(), getRandomInteger(0, DAYS_GAP)) ;
+const generateCommentDate = () => addDaysToDate(new Date().getDay(), getRandomInteger(0, DAYS_GAP)) ;
 
 let commentId = 0;
 
-const generateComment = () => (
+export const generateComment = () => (
   {
     id: commentId++,
     author: getRandomArrayElement(AUTHORS),

@@ -67,11 +67,11 @@ export default class MoviesBoard {
         break;
       case USER_ACTION.ADD_COMMENT:
         this._commentsModel.addComment(updateType, update);
+        this._moviesModel.addComment(updateType, update);
         break;
       case USER_ACTION.DELETE_COMMENT:
         this._commentsModel.deleteComment(updateType, update);
         this._moviesModel.deleteComment(updateType, update);
-        // this._moviesModel.updateMovie(updateType, {...update.movie});
         break;
     }
   }

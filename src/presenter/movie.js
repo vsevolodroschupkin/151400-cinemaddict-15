@@ -4,11 +4,20 @@ import MovieDetailsView from '../view/movie-details.js';
 import { getMovieComments } from '../utils/movies.js';
 import { isEscEvent } from '../utils/common.js';
 import { USER_ACTION, UPDATE_TYPE } from '../const.js';
+import { generateComment } from '../mock/comments.js';
 
 
 const Mode = {
   DEFAULT: 'DEFAULT',
   DETAILS: 'DETAILS',
+};
+
+const KeyPressed = {
+  'Enter': false,
+  'CtrlLeft': false,
+  'CtrlRight': false,
+  'MetaLeft': false,
+  'MetaRight': false,
 };
 
 const START_SCROLL_POSITION = 0;
@@ -32,6 +41,8 @@ export default class Movie {
     this._handleDetailsCloseButtonClick = this._handleDetailsCloseButtonClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleSubmitForm = this._handleSubmitForm.bind(this);
+    // this._keyDownHandler = this._keyDownHandler.bind(this);
   }
 
   init(movie, comments) {
@@ -55,6 +66,7 @@ export default class Movie {
     this._movieDetailsComponent.setMarkAsWatchedHandler(this._handleMarkAsWatchedClick);
     this._movieDetailsComponent.setAddToWatchlistHandler(this._handleAdToWatchlistClick);
     this._movieDetailsComponent.setCommentDeleteClickHandler(this._handleDeleteClick);
+    this._movieDetailsComponent.setCommentSubmitFormHandler(this._handleSubmitForm);
 
 
     if (prevCardComponent === null) {
@@ -220,6 +232,42 @@ export default class Movie {
       UPDATE_TYPE.MINOR,
       data,
     );
+  }
+
+  _handleSubmitForm(evt, data) {
+
+    console.log('событие', evt);
+    // console.log('данные вьюхи', data);
+
+    const localComment = Object.assign(
+      {},
+      generateComment(),
+      {
+        comment: data.text,
+        emotion: data.emoji,
+      },
+    );
+
+    if (evt.keyCode === 13 && (evt.metaKey || evt.ctrlKey)) {
+      console.log(localComment);
+      const movie = this._movie;
+
+      const update = Object.assign(
+        {},
+        {
+          localComment,
+          movie,
+        },
+      );
+
+      console.log(update);
+
+      this._changeData(
+        USER_ACTION.ADD_COMMENT,
+        UPDATE_TYPE.MINOR,
+        update,
+      );
+    }
   }
 
 }

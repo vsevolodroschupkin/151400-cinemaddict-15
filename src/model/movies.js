@@ -41,4 +41,16 @@ export default class Movies extends AbstactObserver {
     this._notify(updateType, updatedMovie);
   }
 
+  addComment(updateType, {comment, movie}) {
+    console.log('movie before comment added', movie);
+    const updatedMovie = {
+      ...movie,
+      comments: [comment.id, ...movie.comments],
+    };
+    console.log('комменты обновленного фильма из модели:', updatedMovie.comments);
+    this.updateMovie(updateType, updatedMovie);
+
+    this._notify(updateType, updatedMovie);
+  }
+
 }

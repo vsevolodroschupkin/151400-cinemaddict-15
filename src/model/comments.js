@@ -1,4 +1,3 @@
-import { generateComment } from '../mock/comments.js';
 import AbstactObserver from '../utils/abstract-observer.js';
 
 export default class Comments extends AbstactObserver {
@@ -16,13 +15,12 @@ export default class Comments extends AbstactObserver {
   }
 
   addComment(updateType, update) {
+    // console.log(update.localComment);
 
-    this._comments = [
-      update.comment,
-      ...this._comments,
-    ];
+    this._comments.push(update.localComment);
 
-    console.log(this._comments);
+    // console.log(this._comments);
+
     this._notify(updateType, update);
   }
 

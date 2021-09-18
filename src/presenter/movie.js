@@ -2,7 +2,7 @@ import { render, RenderPosition, replace, remove } from '../utils/render.js';
 import CardView from '../view/card.js';
 import MovieDetailsView from '../view/movie-details.js';
 import { getMovieComments } from '../utils/movies.js';
-import { isEscEvent } from '../utils/common.js';
+import { isCrtlEnterEvent, isEscEvent } from '../utils/common.js';
 import { USER_ACTION, UPDATE_TYPE } from '../const.js';
 import { generateComment } from '../mock/comments.js';
 
@@ -10,14 +10,6 @@ import { generateComment } from '../mock/comments.js';
 const Mode = {
   DEFAULT: 'DEFAULT',
   DETAILS: 'DETAILS',
-};
-
-const KeyPressed = {
-  'Enter': false,
-  'CtrlLeft': false,
-  'CtrlRight': false,
-  'MetaLeft': false,
-  'MetaRight': false,
 };
 
 const START_SCROLL_POSITION = 0;
@@ -120,6 +112,7 @@ export default class Movie {
     this._movieDetailsComponent.reset(this._movie);
     this._movieDetailsComponent.getElement().remove();
     document.body.removeEventListener('keydown', this._escKeyDownHandler);
+    this._movieDetailsComponent.removeCommentSubmitFormHandler();
     document.body.classList.remove('hide-overflow');
     this._mode = Mode.DEFAULT;
     this._setOpenedMovie(null);
@@ -224,7 +217,7 @@ export default class Movie {
 
   _handleDeleteClick(id) {
     const data = {
-      commentId: Number(id),
+      commentId: id,
       movie: this._movie,
     };
     this._changeData(
@@ -236,9 +229,6 @@ export default class Movie {
 
   _handleSubmitForm(evt, data) {
 
-    console.log('событие', evt);
-    // console.log('данные вьюхи', data);
-
     const localComment = Object.assign(
       {},
       generateComment(),
@@ -248,8 +238,10 @@ export default class Movie {
       },
     );
 
-    if (evt.keyCode === 13 && (evt.metaKey || evt.ctrlKey)) {
-      console.log(localComment);
+    if (isCrtlEnterEvent) {
+      if (!data.text || data.emoji === 'null') {
+        return;
+      }
       const movie = this._movie;
 
       const update = Object.assign(
@@ -259,8 +251,6 @@ export default class Movie {
           movie,
         },
       );
-
-      console.log(update);
 
       this._changeData(
         USER_ACTION.ADD_COMMENT,

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { getRandomInteger } from './random.js';
 
-export const addDaysToDate = (date, daysCount) => dayjs().add(getRandomInteger(dayjs(date), daysCount), 'days').toDate();
+export const addDaysToDate = (date, daysCount) => dayjs().add(getRandomInteger(date, daysCount), 'days').toDate();
 
 export const getFormattedReleaseYear = (date) => dayjs(date).format('YYYY');
 

@@ -1,5 +1,6 @@
 import { addDaysToDate } from '../utils/dates.js';
 import { getRandomInteger, getRandomArrayElement } from '../utils/random.js';
+import { nanoid } from 'nanoid';
 
 const COMMENT_MIN_COUNT = 0;
 const COMMENT_MAX_COUNT = 5;
@@ -24,11 +25,11 @@ const DAYS_GAP = 7;
 
 const generateCommentDate = () => addDaysToDate(new Date().getDay(), getRandomInteger(0, DAYS_GAP)) ;
 
-let commentId = 0;
+// let commentId = 0;
 
 export const generateComment = () => (
   {
-    id: commentId++,
+    id: nanoid(6),
     author: getRandomArrayElement(AUTHORS),
     comment: getRandomArrayElement(COMMENTS),
     date: generateCommentDate(),

@@ -4,10 +4,11 @@ import { filter } from '../utils/filters.js';
 import { UPDATE_TYPE, FILTER_TYPE } from '../const.js';
 
 export default class Filter {
-  constructor(filterContainer, filterModel, moviesModel) {
+  constructor(filterContainer, filterModel, moviesModel, handleMainMenuClick) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
     this._moviesModel = moviesModel;
+    this._handleMainMenuClick = handleMainMenuClick;
 
     this._filterComponent = null;
 
@@ -24,6 +25,7 @@ export default class Filter {
 
     this._filterComponent = new MainNavView(filters, this._filterModel.getFilter());
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
+    this._filterComponent.setMainMenuChangeHandler(this._handleMainMenuClick);
 
     if(prevFilterComponent === null) {
       render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);

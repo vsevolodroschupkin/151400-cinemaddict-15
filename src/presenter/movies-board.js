@@ -36,8 +36,8 @@ export default class MoviesBoard {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._moviesModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
+    // this._moviesModel.addObserver(this._handleModelEvent);
+    // this._filterModel.addObserver(this._handleModelEvent);
     this._commentsModel.addObserver(this._handleModelEvent);
   }
 
@@ -57,8 +57,18 @@ export default class MoviesBoard {
   }
 
   init() {
+    this._moviesModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
     this._renderBoard();
   }
+
+  destroy() {
+    this._clearBoard({resetRenderedMovieCount: false, resetSortType: false});
+    this._moviesModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+    this._currentSortType = SORT_TYPE.DEFAULT;
+  }
+
 
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {

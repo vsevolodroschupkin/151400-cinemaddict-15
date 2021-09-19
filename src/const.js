@@ -51,3 +51,9 @@ export const FILTER_TYPE = {
   HISTORY: 'history',
   FAVORITES: 'favorites',
 };
+
+export const MenuItem = {
+  MOVIES: 'movies',
+  STATISTICS: 'statistics',
+};
+

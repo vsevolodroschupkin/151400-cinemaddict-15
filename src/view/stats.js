@@ -1,4 +1,7 @@
 import SmartView from './smart.js';
+import Chart from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { getDurationMinutes, getDurationHours, getGenresMap, getSortedGenresMap, getTopGenre, getTotalDuration } from '../utils/stats.js';
 
 const StatFilterTypes = {
   ALL_TIME: 'all-time',
@@ -8,30 +11,96 @@ const StatFilterTypes = {
   YEAR: 'year',
 };
 
-// const createStatsFilterItem = (filter, currentFilterType) => {
-//   const {type, count, title} = filter;
+const ChartOptions = {
+  CANVAS_WIDTH: 1000,
+};
 
-//   const isItemCheckedAttr = type === currentFilterType ? 'checked' : '';
+const BAR_HEIGHT = 50;
 
-//   return `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${type}" value="${type}" ${isItemCheckedAttr}>
-//   <label for="statistic-${type}" class="statistic__filters-label">${title}</label>`;
-// };
+const createChart = (ctx, data) => {
+  const {movies} = data;
+  const genresMap = getGenresMap(movies);
+  const sortedGenresMap = getSortedGenresMap(genresMap);
 
-// const createStatsFilter = (filters, currentFilterType) => {
+  const chartLabels = [...sortedGenresMap.keys()];
+  const chartData = [...sortedGenresMap.values()];
 
-//   const statItemsTemplate = filters
-//     .map((filter) => createStatsFilterItem(filter, currentFilterType))
-//     .join('');
-// };
+  const myChart = new Chart(ctx, {
+    plugins: [ChartDataLabels],
+    type: 'horizontalBar',
+    data: {
+      labels: chartLabels,
+      datasets: [{
+        data: chartData,
+        backgroundColor: '#ffe800',
+        hoverBackgroundColor: '#ffe800',
+        anchor: 'start',
+      }],
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 20,
+          },
+          color: '#ffffff',
+          anchor: 'start',
+          align: 'start',
+          offset: 40,
+        },
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: '#ffffff',
+            padding: 100,
+            fontSize: 20,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false,
+          },
+          barThickness: 24,
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false,
+          },
+        }],
+      },
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        enabled: false,
+      },
+    },
+  });
 
-const createStatTemplate = (rank, filters, currentFilterType) => (
-
-  // const statItemsTemplate = filters
-  //   .map((filter) => createStatsFilterItem(filter, currentFilterType))
-  //   .join('');
+  return myChart;
+};
 
 
-  `<section class="statistic">
+const createStatsTemplate = (data) => {
+  const {movies, rank} = data;
+
+  const genresMap = getGenresMap(movies);
+  const canvasWidth = ChartOptions.CANVAS_WIDTH;
+  const canvasHeight = genresMap.size * BAR_HEIGHT;
+  const moviesCount = movies.slice().filter((movie) => movie.userDetails.alreadyWatched).length;
+  const topGenre = getTopGenre(getSortedGenresMap(genresMap));
+  const totalDuration = getTotalDuration(movies);
+  const durationHours = getDurationHours(totalDuration);
+  const durationMiutes = getDurationMinutes(totalDuration);
+
+  console.log(totalDuration);
+
+  return `<section class="statistic">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
@@ -61,34 +130,48 @@ const createStatTemplate = (rank, filters, currentFilterType) => (
     <ul class="statistic__text-list">
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">You watched</h4>
-        <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+        <p class="statistic__item-text">${moviesCount} <span class="statistic__item-description">movies</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
-        <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+        <p class="statistic__item-text">${durationHours} <span class="statistic__item-description">h</span> ${durationMiutes} <span class="statistic__item-description">m</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">Sci-Fi</p>
+        <p class="statistic__item-text">${topGenre}</p>
       </li>
     </ul>
 
     <div class="statistic__chart-wrap">
-      <canvas class="statistic__chart" width="1000"></canvas>
+      <canvas class="statistic__chart" width="${canvasWidth}" height=${canvasHeight}>
+
+      </canvas>
     </div>
 
-  </section>`
-);
+  </section>`;
+};
 
 
 export default class Stats extends SmartView {
-  constructor(movies) {
+  constructor(movies, rank = null) {
     super();
-    this._movies = movies;
+
+    this._data = {
+      movies,
+      rank,
+    };
+
+    this._setChart();
   }
 
   getTemplate() {
-    return createStatTemplate();
+    return createStatsTemplate(this._data);
+  }
+
+  _setChart() {
+    const statsCtx = this.getElement().querySelector('.statistic__chart');
+
+    createChart(statsCtx, this._data);
   }
 
 }

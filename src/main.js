@@ -45,7 +45,7 @@ const handleMainMenuClick = (menuItem) => {
       break;
     case MenuItem.STATISTICS:
       moviesBoardPresenter.destroy();
-      statsComponent = new StatsView();
+      statsComponent = new StatsView(moviesModel.getMovies());
       render(mainElement, statsComponent, RenderPosition.BEFOREEND);
       currentMainMenuItem = MenuItem.STATISTICS;
       break;
@@ -53,8 +53,8 @@ const handleMainMenuClick = (menuItem) => {
 };
 
 
-render(headerElement, new ProfileView(getUserRank(generatedMovies)), RenderPosition.BEFOREEND);
-render(footerElement, new FooteStatisticsView(generatedMovies.length), RenderPosition.BEFOREEND);
+render(headerElement, new ProfileView(getUserRank(moviesModel.getMovies())), RenderPosition.BEFOREEND);
+render(footerElement, new FooteStatisticsView(moviesModel.getMovies().length), RenderPosition.BEFOREEND);
 
 const filterPresenter = new FilterPresenter(mainElement, filterModel, moviesModel, handleMainMenuClick);
 

@@ -75,6 +75,12 @@ export const getMoviesOfPeriod = (movies, period) => {
     return movies;
   }
 
-  // сформировать массив фильмов на основании даты
+  const filteredMovies = movies.filter((movie) => {
+    if (period = 'today') {
+      return movie.userDetails.
+    } else {
+      // отфильтровать так, чтобы дата попала в промежуток: in(periodStart, dayjs)
+    }
+  });
 }
 

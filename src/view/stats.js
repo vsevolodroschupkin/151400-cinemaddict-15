@@ -155,17 +155,41 @@ const createStatsTemplate = (data) => {
 export default class Stats extends SmartView {
   constructor(movies, rank = null) {
     super();
+    this._movies = movies;
 
     this._data = {
-      movies,
+      movies: getMoviesOfPeriod(this._movies, 'all-time'),
       rank,
+      period: 'all-time',
     };
+
+    this._periodChangeHandler = this._periodChangeHandler.bind(this);
+    this._setInnerHandlers();
 
     this._setChart();
   }
 
   getTemplate() {
     return createStatsTemplate(this._data);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this._setChart();
+  }
+
+  _periodChangeHandler(evt) {
+    evt.preventDefault();
+
+    const periodValue = evt.target.value;
+
+    this.updateData({
+      movies: getMoviesOfPeriod(this._movies, periodValue),
+      period: periodValue,
+    });
+
+    this.getElement().querySelector(`#statistic-${periodValue}`).setAttribute('checked', 'true');
+
   }
 
   _setChart() {
